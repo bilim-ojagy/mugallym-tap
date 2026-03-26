@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mugallym Tap - Hyzmatlar</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/all.min.css"/>
+  </head>
+  <body id="top">
+    <header>
+      <div class="burger" id="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+      <nav class="nav-links" id="nav-menu">
+        <a href="#top"><i class="fa-solid fa-house"></i> Baş Sahypa</a>
+        <a href="#" id="add-mugallym-btn"
+          ><i class="fa-solid fa-user-plus"></i> Mugallym Bol</a>
+
+        <div class="dropdown-container">
+          <a href="#" id="category-btn"
+            ><i class="fa-solid fa-layer-group"></i> Dersler</a
+          >
+          <ul class="dropdown-menu" id="category-dropdown">
+            <li onclick="filtermugallymlar('Ählisi')">Ählisi</li>
+            <li onclick="filtermugallymlar('Matematika')">Matematika</li>
+            <li onclick="filtermugallymlar('iňlis dili')">Iňlis dili</li>
+            <li onclick="filtermugallymlar('Informatika')">Informatika</li>
+          </ul>
+        </div>
+
+        <a href="tel:+99361122234" class="call-action">
+          <i class="fa-solid fa-phone"></i> Jaň Et
+        </a>
+      <a href="#" id="login-btn">
+        <i class="fa-solid fa-user"></i>Giriş
+      </a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>BILIM OJAGY</h1>
+      <p>Size haýsy ugurdan bilim bermeli?</p>
+
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Ders gözle... (meselem: Matematika)"
+        />
+        <button id="searchBtn">Gözle</button>
+        </div>
+    </main>
+    <div class="filter-buttons">
+      <button onclick="filtermugallymlar('Ählisi')" class="filter-btn active">Ählisi</button>
+       <button onclick="filtermugallymlar('Matematika')" class="filter-btn">Matematika</button>
+        <button onclick="filtermugallymlar('iňlis dili')" class="filter-btn">iňlis dili</button>
+         <button onclick="filtermugallymlar('Informatika')" class="filter-btn">Informatika</button>
+         </div>
+      
+    <button id="theme-toggle" class="theme-btn">
+          <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <section class="services" id="services-container"></section>
+
+    <div id="mugallymmodal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3><i class="fa-solid fa-user-plus"></i> Mugallym hasaba almak</h3>
+        <form id="mugallymForm">
+          <div class="input-group">
+            <input type="text" id="mugallymAdy" placeholder="Adyňyz we Familiýaňyz" required/>
+            <input type="text" id="dersi" placeholder="Okatýan ugruňyz"  required/>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="mugallymTel" placeholder="Telefon belgiňiz" required/>
+            <input type="number" id="mugallymYasy" placeholder="Ýaşyňyz"required>
+            </div>
+
+            <div class="input-group">
+              <input type="text" id="mugallymTejribe" placeholder="Tejribäňiz (meselem: 5 ýyl)" required/>
+              <input type="text" id="mugallymSalgy" placeholder="Ýaşaýan ýerňiz!">
+            </div>
+
+            <div class="input-group">
+            <input type="file" id="mugallymSurat" accept="image/*" />
+          </div>
+
+          <button type="submit" class="btn-submit">Hasaba Al</button>
+        </form>
+      </div>
+    </div>
+    <div id="loginmodal"class="modal">
+      <div class="modal-content" id="login-modal-content">
+        <span class="close" id="loginClose">&times;</span>
+        <h3><i class="fa-solid fa-user"></i>Giriş</h3>
+        <form id="loginForm">
+          <div class="input-group">
+            <input type="text" id="loginAdy" placeholder="Ulanyjy adynyz"required/>
+            </div>
+            <div class="input-group">
+            <input type="password" id="loginParol" placeholder="Parolyňyz"required/>
+          </div>
+          <button type="submit"class="btn-submit">Giriş</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <h2>BILIM OJAGY</h2>
+        <p>Bilim almak - geljege maýa goýmak</p>
+
+        <div class="footer-info">
+          <p><i class="fa-solid fa-location-dot"></i> Aşgabat, Türkmenistan</p>
+          <p><i class="fa-solid fa-phone"></i> +993 65407509</p>
+          <p><i class="fa-solid fa-envelope"></i> srejepow902@gmail.com</p>  
+        </div>
+
+        <div class="footer-social">
+          
+          <a href="#"><i class="fa-brands fa-telegram"></i></a>
+            
+        </div>
+
+        <p class="footer-copy">© 2026 Bilim Ojagy. Ähli hukuklar goragly.</p>
+       </div>
+    </footer>
+
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
