@@ -1,3 +1,27 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Firebase-den nusgalan Config kodyňyz:
+const firebaseConfig = {
+  apiKey: "AIza...",
+  authDomain: "bilim-ojagy.firebaseapp.com",
+  projectId: "bilim-ojagy",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
+
+// Işe girizmek
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+async function mugallymlaryGetir() {
+    const querySnapshot = await getDocs(collection(db, "mygallymlar"));
+    querySnapshot.forEach((doc) => {
+        console.log("Mugallym:", doc.data().ady);
+    });
+}
+mugallymlaryGetir();
+
 document.getElementById("category-btn").addEventListener("click", function (e) {
   if (window.innerWidth <= 768) {
     e.preventDefault();
