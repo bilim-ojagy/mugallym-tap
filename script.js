@@ -1,26 +1,30 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Firebase-den nusgalan Config kodyňyz:
 const firebaseConfig = {
-  apiKey: "AIza...",
-  authDomain: "bilim-ojagy.firebaseapp.com",
-  projectId: "bilim-ojagy",
-  storageBucket: "...",
-  messagingSenderId: "...",
-  appId: "..."
+  apiKey: "AIzaSyBTjhoZS9FLBvaCHLCGr9f1FnGmnNHFLho",
+  authDomain: "mugallym-tap.firebaseapp.com",
+  projectId: "mugallym-tap",
+  storageBucket: "mugallym-tap.firebasestorage.app",
+  messagingSenderId: "636479603378",
+  appId: "1:636479603378:web:bbd4de11a804f68c29bfab",
+  measurementId: "G-EV3B3RYC6H"
 };
 
-// Işe girizmek
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 async function mugallymlaryGetir() {
     const querySnapshot = await getDocs(collection(db, "mygallymlar"));
-    querySnapshot.forEach((doc) => {
-        console.log("Mugallym:", doc.data().ady);
+    mugallymlar = [];
+    querySnapshot.forEach((d) => {
+        mugallymlar.push({ ...d.data(), firebaseId: d.id});
     });
+    displaymugallymlar(mugallymlar);
 }
 mugallymlaryGetir();
+
+
 
 document.getElementById("category-btn").addEventListener("click", function (e) {
   if (window.innerWidth <= 768) {
@@ -72,12 +76,19 @@ function displaymugallymlar(Sanaw) {
 `;
      card.addEventListener("click",(e)=>{
       if (e.target.closest(".btn-call")||e.target.closest(".btn-delete"))return;
-
+      document.querySelector('.theme-btn').style.display = 'none';
       Swal.fire ({
-        title:mugallym.ady,
+        title: '',
         html:`
-         <img src="${mugallym.surat}" style="width:150px; height:150px; border-radius:50%; object-fit:cover; margin-bottom:15px;">
-         <p><i class="fa-solid fa-briefcase" style= "color: #007bff"></i><strong>Dersi:</strong> ${mugallym.dersi}</p>
+        <div class="mugallym-profil">
+         <img src="${mugallym.surat}" class="profil-surat">
+         <div class="profil-info">
+         <h3 class="profil-ady">${mugallym.ady}</h3>
+         <p class="profil-dersi">
+         <i class="fa-solid fa-briefcase"></i> ${mugallym.dersi}
+         </p>
+        </div>
+       </div>
          <p><i class="fa-solid fa-phone" style= "color: #007bff"></i> <strong>Tel:</strong> ${mugallym.tel}</p>
          <p><i class="fa-solid fa-user" style= "color: #007bff"></i> <strong>Ýaşy:</strong> ${mugallym.yasy ||"Näbelli"}</p>
          <p><i class="fa-solid fa-star" style= "color: #007bff"></i> <strong>Tejribe:</strong> ${mugallym.tejribe ||"Näbelli"}</p> 
@@ -93,11 +104,38 @@ function displaymugallymlar(Sanaw) {
          }).join('')}
           </div>
           </div>
+
+          <div class="teswir-bolum">
+          <p><strong>Teswirler:</strong></p>
+          <div class="teswirler-container" id="teswirler-${mugallym.id}">
+          ${(JSON.parse(localStorage.getItem("teswirler-" + mugallym.id)) || []).map(t => `
+          <div class="teswir-kart">
+          <strong>${t.ady}</strong>
+          <p>${t.teswir}</p>
+          </div>
+          `).join('') || '<p class="teswir-yok">Heniz teswir yok</p>'}
+          </div>
+          <input type="text" id="teswirAdy-${mugallym.id}"
+          placeholder="Adyňyz"  class="teswir-input"/>
+          <textarea id="teswirYaz-${mugallym.id}"
+          placeholder="Teswiriňizi ýazyň..." class="teswir-textarea"></textarea>
+          <button onclick="teswirGos(${mugallym.id})" class="teswir-btn">
+            Teswir Goş
+          </button>
+          </div>
          `,
          background:"#1a1a1a",
          color: "#fff",
-         confirmButtonText: "Ýap",
-         confirmButtonColor: "#007bff"  
+         showConfirmButton: false,
+         showCloseButton: true,
+         grow: false,
+         scrollbarsPadding: false,
+         customClass: {
+          popup: 'mugallym-popup'
+         },
+         didClose: () => {
+          document.querySelector('.theme-btn').style.display = 'flex';
+         }
       });
     });
      container.appendChild(card);  
@@ -201,8 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
           dersi: document.getElementById("dersi").value.trim(),
           tel: document.getElementById("mugallymTel").value.trim(),
           yasy: document.getElementById("mugallymYasy").value.trim(),
-          tejribe: document.getElementById("mugallymTejribe").value.trim(),
-          salgy: document.getElementById("mugallymSalgy").value.trim(),
+          welayat: document.getElementById("mugallymWelayat").value,
+          etrap: document.getElementById("mugallymEtrap").value,
+          shaher: document.getElementById("mugallymShaher").value,
+          salgy: document.getElementById("mugallymWelayat").value + ", " +
+                 document.getElementById("mugallymEtrap").value + ", " +
+                 document.getElementById("mugallymShaher").value,
           surat: event.target.result,
           description: "Siziň hyzmatyňyzda!",
           baha:0,
@@ -285,21 +327,21 @@ if (loginForm) {
 function mugallymPoz(id) {
   Swal.fire({
     title: "Siz pozmak isleyärsiňizmi?",
-    text: "Bu mugallym sanawdan doly pozular!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: "Hawa,poz!",
     cancelButtonText: "Bes et",
     background: "#1a1a1a",
     color: "#fff",
-  }).then((result) => {
+  }).then(async(result) => {
     if (result.isConfirmed) {
-      mugallymlar = mugallymlar.filter(
-        (mugallymlar) => mugallymlar.id !== Number(id),
-      );
+      const mugallym = mugallymlar.find(m => m.id === Number(id));
+      if (mugallym && mugallym.firebaseId) {
+        await deleteDoc(doc(db, "mugallymlar", mugallym.firebaseId));
+      }
+      mugallymlar = mugallymlar.filter(m => m.id !== Number(id));
       displaymugallymlar(mugallymlar);
-      localStorage.setItem("mugallymlar", JSON.stringify(mugallymlar));
-
+      
       Swal.fire({
         title: "Pozuldy!",
         icon: "success",
@@ -312,31 +354,184 @@ function mugallymPoz(id) {
   });
 }
 
-function mugallymGos(tazemugallym) {
-  mugallymlar.push(tazemugallym);
-  displaymugallymlar(mugallymlar);
-  localStorage.setItem("mugallymlar", JSON.stringify(mugallymlar));
+const locationData = {
+  "Aşgabat": {
+    "Aşgabat şäheri": ["Köpetdag", "Büzmeýin", "Bagtyýarlyk", "Berkararlyk"],
+    "Abadan etraby": ["Abadan", "Änew"]
+  },
+  "Ahal": {
+    "Ak bugdaý etraby": ["Änew", "Bagabat"],  
+    "Bäherden etraby": ["Bäherden",  "Gäwers"],
+    "Kaka etraby": ["Kaka", "Artyk"],
+    "Tejen etraby":["Tejen", "Sarahs"],
+    "Babadaýhan etraby":["Babadaýhan"],
+    "Derweze etraby": ["Derweze"], 
+  },
+  "Balkan": {
+    "Balkanabat şäheri":["Balkanabat"],
+    "Serdar etraby":["Serdar", "Gyzylarbat"],
+    "Türkmenbaşy şäheri":["Türkmenbaşy", "Awaza"],
+    "Bereket etraby":["Bereket"],
+    "Etrek etraby":["Etrek"],
+    "Magtymguly etraby":["Magtymguly"],
+  },
+  "Daşoguz": {
+    "Daşoguz şäheri": ["Daşoguz"],
+    "Görogly etraby":["Görogly"],
+    "Gubadag etraby":["Gubadag"],
+    "Köneürgenç etraby":["Köneürgenç"],
+    "Ruhubelent etraby":["Ruhybelent"],
+    "Şabat etraby":["Şabat"],
+    "Tagta etraby":["Tagta"],
+    "Akdepe etraby":["Akdepe"],
+    "Boldumsaz etraby":["Buldumsaz"]
+  },
+  "Lebap": {
+    "Türkmenabat şäheri":["Türkmenabat"],
+    "Atamyrat etraby":["Atamyrat"],
+    "Çärjew etraby":["Çärjew"],
+    "Dänew etraby":["Dänew"],
+    "Farap etraby":["Farap"],
+    "Halaç etraby":["Halaç"],
+    "Köýtendag etraby":["Köýtendag"],
+    "Saýat etraby":["Saýat"],
+    "Ýolöten etraby":["Ýolöten"]
+  },
+  "Mary": {
+    "Mary şäheri":["Mary"],
+    "Baýramaly etraby":["Baýramaly"],
+    "Murgap etraby":["Murgap"],
+    "Sakarçäge etraby":["Sakarçäge"],
+    "Serhedabat etraby":["Serhedabat"],
+    "Tagtabazar etraby":["Tagtabazar"],
+    "Türkmengala etraby":["Türkmengala"],
+    "Wekilbazar etraby":["Wekilbazar"]
+  }
+};
+
+function formWelayatChange(){
+    const w = document.getElementById("mugallymWelayat").value;
+    const etrapEl = document.getElementById("mugallymEtrap");
+    const shaherEl = document.getElementById("mugallymShaher");
+    etrapEl.innerHTML = '<option value="">- Etrap saýlaň -</option>';
+    shaherEl.innerHTML = '<option value="">- Şäher saýlaň -</option>';
+    shaherEl.disabled = true;
+    if (w && locationData[w]){
+      Object.keys (locationData[w]).forEach(e =>{
+        const opt = document.createElement("option");
+        opt.value = e; opt.textContent = e;
+        etrapEl.appendChild(opt);
+      });
+      etrapEl.disabled = false;
+    }else{
+      etrapEl.disabled = true;
+  }    
+}
+
+function formEtrapChange(){
+  const w = document.getElementById("mugallymWelayat").value;
+  const e = document.getElementById("mugallymEtrap").value;
+  const shaherEl = document.getElementById("mugallymShaher");
+  shaherEl.innerHTML = '<option value="">- Şäher saýlaň -</option>';
+  if (w && e && locationData[w][e]) {
+    locationData[w][e].forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      shaherEl.appendChild(opt);
+    });
+    shaherEl.disabled = false;
+  }else{
+    shaherEl.disabled = true;
+  }  
+}
+function formShaherChange() {
+
+}
+
+function suzgucWelayatChange(){
+  const w = document.getElementById("suzgucWelayat").value;
+  const etrapEl = document.getElementById("suzgucEtrap");
+  const shaherEl = document.getElementById("suzgucShaher");
+  etrapEl.innerHTML = '<option value="">- Ähli etrap -</option>';
+  shaherEl.innerHTML = '<option value="">- Ähli şäher -</option>';
+  shaherEl.disabled = true;
+  if (w  && locationData[w]) {
+   Object.keys(locationData[w]).forEach(e => {
+      const opt = document.createElement("option");
+      opt.value = e; opt.textContent = e;
+      etrapEl.appendChild(opt);
+    });
+    etrapEl.disabled = false;
+  }else{
+    etrapEl.disabled = true;
+  }  
+  yerSuzguc();
+}
+
+function suzgucEtrapChange(){
+  const w = document.getElementById("suzgucWelayat").value;
+  const e = document.getElementById("suzgucEtrap").value;
+  const shaherEl = document.getElementById("suzgucShaher");
+  shaherEl.innerHTML = '<option value="">- Ähli şäher -</option>';
+  if (w  && e && locationData[w][e]) {
+locationData[w][e].forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      shaherEl.appendChild(opt);
+    });
+    shaherEl.disabled = false;
+  }else{
+    shaherEl.disabled = true;
+  }  
+  yerSuzguc();
+}
+
+function yerSuzguc() {
+  const w = document.getElementById("suzgucWelayat").value;
+  const e = document.getElementById("suzgucEtrap").value;
+  const s = document.getElementById("suzgucShaher").value;
+  let netije = mugallymlar;
+  if (s) {
+    netije = mugallymlar.filter(m =>
+      m.shaher === s || m.etrap === e || m. welayat === w
+    );
+    netije.sort((a, b)=> {
+      const aPuan = a.shaher === s ? 3 : a.etrap === e ? 2 : 1;
+      const bPuan = b.shaher === s ? 3 : b.etrap === e ? 2 : 1;
+      return aPuan - bPuan;
+    });
+  }else if (e){
+   netije = mugallymlar.filter(m => m.etrap === e || m.welayat === w);
+  }else if (w){
+    netije = mugallymlar.filter(m => m.welayat === w);
+  }
+  displaymugallymlar(netije);
+}
+
+
+async function mugallymGos(tazemugallym) {
+  try {
+   const docRef = await addDoc(collection(db, "mugallymlar"), tazemugallym);
+   tazemugallym.firebaseId = docRef.id;
+   mugallymlar.push(tazemugallym);
+   displaymugallymlar(mugallymlar);
 
   const modal = document.getElementById("mugallymmodal");
   const form = document.getElementById("mugallymForm");
-
   if (form) form.reset();
   if (modal) modal.style.display = "none";
 
-  console.log("SweetAlert çagyrylýar...");
-
   Swal.fire({
     icon: "success",
-    title: "mugallym goşuldy!",
+    title: "Mugallym goşuldy!",
     text: "Täze mugallym sanawa üstünlikli girizildi.",
     showConfirmButton: false,
     timer: 2000,
-    timerProgressBar: true,
-    allowOutsideClick: false,
     background: "#1a1a1a",
     color: "#fff",
     iconColor: "#2ecc71",
   });
+
   setTimeout(() => {
     const container = document.getElementById("services-container");
     if (container) {
@@ -346,6 +541,9 @@ function mugallymGos(tazemugallym) {
       });
     }
   }, 100);
+} catch (e){
+  console.error("Ýalňyşlyk:", e);
+}
 }
 document.querySelector('a[href="#top"]').addEventListener("click",(e) =>{
   e.preventDefault()
@@ -392,3 +590,45 @@ function bahaBer(id, yildyz) {
     });
   }
 }
+
+function teswirGos(id) {
+  const ady = document.getElementById("teswirAdy-" + id).value.trim();
+  const teswir = document.getElementById("teswirYaz-" + id).value.trim();
+  if (!ady || !teswir) {
+    Swal.fire({
+      icon: "warning",
+      title: "Dolduryň",
+      text: "Adyňyzy we teswirlerňizi ýazyň!",
+      background: "#1a1a1a",
+      color: "#fff",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+    return;
+  }
+
+const teswirler = JSON.parse(localStorage.getItem("teswirler-" + id)) || [];
+teswirler.push({ady, teswir});
+localStorage.setItem("teswirler-" + id, JSON.stringify(teswirler));
+const container = document.getElementById("teswirler-" + id);
+const täzeDiv = document.createElement("div");
+täzeDiv.className ="teswir-kart";
+täzeDiv.innerHTML =`
+   <strong>${ady}</strong>
+   <p>${teswir}</p>
+`;
+container.appendChild(täzeDiv);
+document.getElementById("teswirAdy-" + id).value = "";
+document.getElementById("teswirYaz-" + id).value = "";
+}
+window.formWelayatChange = formWelayatChange;
+window.formShaherChange = formShaherChange;
+window.formEtrapChange = formEtrapChange;
+window.suzgucWelayatChange = suzgucWelayatChange;
+window.suzgucEtrapChange = suzgucEtrapChange;
+window.yerSuzguc = yerSuzguc;
+window.filtermugallymlar = filtermugallymlar;
+window.mugallymPoz = mugallymPoz;
+window.janEt = janEt;
+window.bahaBer = bahaBer;
+window.teswirGos = teswirGos;

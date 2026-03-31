@@ -50,7 +50,10 @@
           id="searchInput"
           placeholder="Ders gözle... (meselem: Matematika)"
         />
-        <button id="searchBtn">Gözle</button>
+        <button id="searchBtn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Gözle</span>
+        </button>
         </div>
     </main>
     <div class="filter-buttons">
@@ -64,7 +67,24 @@
           <i class="fa-solid fa-moon"></i>
     </button>
 
-    <section class="services" id="services-container"></section>
+           <div class="yer-suzguc">
+              <select id="suzgucWelayat" onchange="suzgucWelayatChange()">
+                <option value="">- Ähli welaýat -</option>
+                <option value="Aşgabat">Aşgabat</option>
+                <option value="Ahal">Ahal</option>
+                <option value="Balkan">Balkan</option>
+                <option value="Daşoguz">Daşoguz</option>
+                <option value="Lebap">Lebap</option>
+                <option value="Mary">Mary</option>
+              </select>
+              <select id="suzgucEtrap" onchange="suzgucEtrapChange()" disabled>
+                <option value="">- Ähli etrap -</option>
+              </select>
+              <select id="suzgucShaher" onchange="yerSuzguc()" disabled>
+                <option value="">- Ähli şäher -</option>
+              </select>
+            </div>
+            <section class="services" id="services-container"></section>
 
     <div id="mugallymmodal" class="modal">
       <div class="modal-content">
@@ -83,17 +103,31 @@
 
             <div class="input-group">
               <input type="text" id="mugallymTejribe" placeholder="Tejribäňiz (meselem: 5 ýyl)" required/>
-              <input type="text" id="mugallymSalgy" placeholder="Ýaşaýan ýerňiz!">
-            </div>
+               <select id="mugallymWelayat" onchange="formWelayatChange()" required>
+                <option value="">-Welaýat saýlaň -</option>
+                <option value="Aşgabat">Aşgabat</option>
+                <option value="Ahal">Ahal welaýaty</option>
+                <option value="Balkan">Balkan welaýaty</option>
+                <option value="Daşoguz">Daşoguz welaýaty</option>
+                <option value="Lebap">Lebap welaýaty</option>
+                <option value="Mary">Mary welaýaty</option>
+               </select>
+               <select id="mugallymEtrap" onchange="formEtrapChange()" required disabled>
+                <option value="">- Etrap saýlaň -</option>
+               </select>
+               <select id="mugallymShaher" required disabled>
+                <option value="">- Şäher saýlaň -</option>
+               </select>
+               </div>
 
-            <div class="input-group">
+               <div class="input-group">
             <input type="file" id="mugallymSurat" accept="image/*" />
           </div>
-
-          <button type="submit" class="btn-submit">Hasaba Al</button>
+           <button type="submit" class="btn-submit">Hasaba Al</button>
         </form>
       </div>
     </div>
+       
     <div id="loginmodal"class="modal">
       <div class="modal-content" id="login-modal-content">
         <span class="close" id="loginClose">&times;</span>
@@ -118,13 +152,12 @@
         <div class="footer-info">
           <p><i class="fa-solid fa-location-dot"></i> Aşgabat, Türkmenistan</p>
           <p><i class="fa-solid fa-phone"></i> +993 65407509</p>
-          <p><i class="fa-solid fa-envelope"></i> srejepow902@gmail.com</p>  
+          <p><i class="fa-solid fa-envelope"></i>srejepow902@gmail.com</p>
         </div>
 
         <div class="footer-social">
-          
-          <a href="#"><i class="fa-brands fa-telegram"></i></a>
-            
+          <a href="https://t.me/s_rejepow"target="_blank">
+            <i class="fa-brands fa-telegram"></i></a>
         </div>
 
         <p class="footer-copy">© 2026 Bilim Ojagy. Ähli hukuklar goragly.</p>
