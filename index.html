@@ -6,6 +6,7 @@
     <title>Mugallym Tap - Hyzmatlar</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="icon" type="image/png" href="sapka.png">
   </head>
   <body id="top">
     <header>
@@ -15,34 +16,45 @@
         <div class="line3"></div>
       </div>
       <nav class="nav-links" id="nav-menu">
-        <a href="#top"><i class="fa-solid fa-house"></i> Baş Sahypa</a>
+        <a href="#top"><i class="fa-solid fa-house"></i><span id="menu-bas">Baş Sahypa</span></a>
         <a href="#" id="add-mugallym-btn"
-          ><i class="fa-solid fa-user-plus"></i> Mugallym Bol</a>
+          ><i class="fa-solid fa-user-plus"></i> <span id="menu-mugallym">Mugallym Bol</span></a>
 
         <div class="dropdown-container">
-          <a href="#" id="category-btn"
-            ><i class="fa-solid fa-layer-group"></i> Dersler</a
-          >
+          <a href="#" id="category-btn">
+            <i class="fa-solid fa-layer-group"></i><span id="nav-dersler">Dersler</span>
+            </a>
           <ul class="dropdown-menu" id="category-dropdown">
-            <li onclick="filtermugallymlar('Ählisi')">Ählisi</li>
-            <li onclick="filtermugallymlar('Matematika')">Matematika</li>
-            <li onclick="filtermugallymlar('iňlis dili')">Iňlis dili</li>
-            <li onclick="filtermugallymlar('Informatika')">Informatika</li>
+            <li onclick="filtermugallymlar('Ählisi')" id="drop-all">Ählisi</li>
+            <li onclick="filtermugallymlar('Matematika')" id="drop-math">Matematika</li>
+            <li onclick="filtermugallymlar('iňlis dili')" id="drop-english">Iňlis dili</li>
+            <li onclick="filtermugallymlar('Informatika')"id="drop-it">Informatika</li>
           </ul>
         </div>
 
         <a href="tel:+99361122234" class="call-action">
-          <i class="fa-solid fa-phone"></i> Jaň Et
-        </a>
+          <i class="fa-solid fa-phone"></i><span id="menu-jan">Jaň Et</span></a>
       <a href="#" id="login-btn">
-        <i class="fa-solid fa-user"></i>Giriş
-      </a>
+        <i class="fa-solid fa-user"></i> <span id="menu-giris">Giriş</span></a>
       </nav>
+      <div class="dil-secici">
+        <button onclick="dilUytget('tk')" class="dil-btn" id="dil-tk">
+          <img src="tm.png" alt="TM">
+        </button>
+        <button onclick="dilUytget('ru')" class="dil-btn" id="dil-ru">
+          <img src="ru.png" alt="RU">
+        </button>
+      </div>
+
+       <button id="theme-toggle" class="theme-btn">
+          <i class="fa-solid fa-moon"></i>
+    </button>
+
     </header>
 
     <main>
-      <h1>BILIM OJAGY</h1>
-      <p>Size haýsy ugurdan bilim bermeli?</p>
+     <h1 BILIM id="hero-title">BILIM OJAGY</h1>
+      <p id="hero-subtitle">Size haýsy ugurdan bilim bermeli?</p>
 
       <div class="search-box">
         <input
@@ -52,21 +64,17 @@
         />
         <button id="searchBtn">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <span>Gözle</span>
+          <span id="search-btn">Gözle</span>
         </button>
         </div>
     </main>
     <div class="filter-buttons">
-      <button onclick="filtermugallymlar('Ählisi')" class="filter-btn active">Ählisi</button>
-       <button onclick="filtermugallymlar('Matematika')" class="filter-btn">Matematika</button>
-        <button onclick="filtermugallymlar('iňlis dili')" class="filter-btn">iňlis dili</button>
-         <button onclick="filtermugallymlar('Informatika')" class="filter-btn">Informatika</button>
+      <button onclick="filtermugallymlar('Ählisi')" class="filter-btn active" id="filter-all">Ählisi</button>
+       <button onclick="filtermugallymlar('Matematika')" class="filter-btn" id="filter-math">Matematika</button>
+        <button onclick="filtermugallymlar('iňlis dili')" class="filter-btn" id="filter-english">iňlis dili</button>
+         <button onclick="filtermugallymlar('Informatika')" class="filter-btn" id="filter-it">Informatika</button>
          </div>
       
-    <button id="theme-toggle" class="theme-btn">
-          <i class="fa-solid fa-moon"></i>
-    </button>
-
            <div class="yer-suzguc">
               <select id="suzgucWelayat" onchange="suzgucWelayatChange()">
                 <option value="">- Ähli welaýat -</option>
@@ -89,7 +97,7 @@
     <div id="mugallymmodal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h3><i class="fa-solid fa-user-plus"></i> Mugallym hasaba almak</h3>
+        <h3><i class="fa-solid fa-user-plus"></i><span  id="modal-title"> Mugallym hasaba almak</span></h3>
         <form id="mugallymForm">
           <div class="input-group">
             <input type="text" id="mugallymAdy" placeholder="Adyňyz we Familiýaňyz" required/>
@@ -97,7 +105,8 @@
           </div>
 
           <div class="input-group">
-            <input type="text" id="mugallymTel" placeholder="Telefon belgiňiz" required/>
+            <input type="tel" id="mugallymTel" placeholder="+993 XX XXX XXX" required/>
+             <span id="tel-error">+993 bilen başlamaly!</span>
             <input type="number" id="mugallymYasy" placeholder="Ýaşyňyz"required>
             </div>
 
@@ -121,50 +130,95 @@
                </div>
 
                <div class="input-group">
+               <label id="surat-label" for="mugallymSurat">Surat saýlaň</label>
             <input type="file" id="mugallymSurat" accept="image/*" />
           </div>
-           <button type="submit" class="btn-submit">Hasaba Al</button>
+           <button type="submit" class="btn-submit" id="btn-submit">Hasaba Al</button>
         </form>
       </div>
     </div>
        
-    <div id="loginmodal"class="modal">
-      <div class="modal-content" id="login-modal-content">
-        <span class="close" id="loginClose">&times;</span>
-        <h3><i class="fa-solid fa-user"></i>Giriş</h3>
-        <form id="loginForm">
-          <div class="input-group">
-            <input type="text" id="loginAdy" placeholder="Ulanyjy adynyz"required/>
-            </div>
-            <div class="input-group">
-            <input type="password" id="loginParol" placeholder="Parolyňyz"required/>
-          </div>
-          <button type="submit"class="btn-submit">Giriş</button>
-        </form>
+    <div id="loginmodal" class="modal">
+  <div class="modal-content" id="login-modal-content">
+    <span class="close" id="loginClose">&times;</span>
+    
+
+    <!-- Giriş paneli -->
+    <div class="panel active" id="panel-giris">
+      <div class="panel-header">
+        <div class="logo-icon">B</div>          
+        <h2 id="giris-title">Giriş</h2>
       </div>
+
+      <form id="loginForm">
+        <input class="input-field" type="email" id="loginAdy" placeholder="Email adresiniz" required />
+        <input class="input-field" type="password" id="loginParol" placeholder="Parolyňyz" required />
+        <button type="submit" class="btn-primary" id="giris-btn">Giriş</button>
+      </form>
+
+      <div class="divider"><span id="giris-yada">ýa-da</span></div>
+
+      <button class="google-btn" onclick="googleBilenGir()">
+       <img src="google.png" width="20" height="20"/>
+        <span id="google-giris">Google bilen gir</span>
+      </button>
+
+      <p class="switch-tab">Hasabyň ýokmy?
+        <span onclick="switchTab('hasaba')" id="hasaba-al-link">Hasaba Al</span></p>
     </div>
 
-    <footer>
-      <div class="footer-content">
-        <h2>BILIM OJAGY</h2>
-        <p>Bilim almak - geljege maýa goýmak</p>
+    <div class="panel" id="panel-hasaba">
+      <div class="panel-header">
+        <div class="logo-icon">B</div>
+        <h2 id="hasaba-title">Hasaba Al</h2>
+      </div>
+      <form id="registerForm">
+        <input class="input-field" type="email" id="registerEmail" placeholder="Email adresiniz" required />
+        <input class="input-field" type="password" id="registerParol" placeholder="Parolyňyz (min 6 harp)" required />
+        <button type="submit" class="btn-primary" id="hasaba-btn">Hasaba Al</button>
+      </form>
+      <div class="divider"><span id="hasaba-yada">ya-da</span></div>
 
-        <div class="footer-info">
+      <button class="google-btn" onclick="googleBilenGir()">
+        <img src="google.png" width="20" height="20"/>
+        <span id="google-hasaba">Google bilen gir</span>
+      </button>
+
+       <p class="switch-tab">Hasabyň barmy?
+        <span onclick="switchTab('giris')" id="giris-link">Giriş</span></p>
+    </div>
+
+  </div>
+</div>
+
+
+
+      <section class="biz-hakda">
+      <div class="biz-hakda-content">
+        <h2 id="biz-hakda-title">Biz hakda</h2> 
+        <p class="biz-hakda-desc" id="biz-hakda-desc">"Mugallym Tap"- Türkmenistanda iň gowy
+         mugallymy tapmak üçin döredilen platforma. 
+         Biziň maksadymyz her bir okuwçy öz ugrundan tejribeli mugallymy
+        aňsat tapmaga kömek etmek. 
+      </p>
+        <div class="biz-hakda-info">
           <p><i class="fa-solid fa-location-dot"></i> Aşgabat, Türkmenistan</p>
           <p><i class="fa-solid fa-phone"></i> +993 65407509</p>
           <p><i class="fa-solid fa-envelope"></i>srejepow902@gmail.com</p>
         </div>
 
-        <div class="footer-social">
+        <div class="biz-hakda-social">
           <a href="https://t.me/s_rejepow"target="_blank">
-            <i class="fa-brands fa-telegram"></i></a>
+            <i class="fa-brands fa-telegram"></i>
+          </a>
         </div>
-
-        <p class="footer-copy">© 2026 Bilim Ojagy. Ähli hukuklar goragly.</p>
        </div>
-    </footer>
-
+    </section>
+    
     <script src="sweetalert2.all.min.js"></script>
     <script type="module" src="script.js"></script>
+    <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
   </body>
 </html>
