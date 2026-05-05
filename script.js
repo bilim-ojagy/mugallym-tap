@@ -8,13 +8,15 @@ const firebaseConfig = {
   storageBucket: "mugallym-tap.firebasestorage.app",
   messagingSenderId: "636479603378",
   appId: "1:636479603378:web:bbd4de11a804f68c29bfab",
-  measurementId: "G-EV3B3RYC6H"
+  measurementId: "G-EV3B3RYC6H",
 };
 
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+
+ 
 
    async function mugallymlaryGetir() {
     const querySnapshot = await getDocs(collection(db, "mugallymlar"));
@@ -92,7 +94,7 @@ function displaymugallymlar(Sanaw) {
     <button class="btn-call" onclick="janEt('${mugallym.tel}')">
     <i class="fa-solid fa-phone"></i> ${localStorage.getItem ("dil") === "ru" ? "Позвонить" : "Jan Et"}
     </button>
-    ${loggedIn ? `<button class="btn-delete" onclick="mugallymPoz('${mugallym.id}')">
+     ${loggedIn ? `<button class="btn-delete" onclick="mugallymPoz('${mugallym.id}')">
       <i class="fa-solid fa-trash"></i>  
      </button>`:''}
     </div>
@@ -100,7 +102,6 @@ function displaymugallymlar(Sanaw) {
      card.addEventListener("click", async (e)=>{
       if (e.target.closest(".btn-call")||e.target.closest(".btn-delete")||e.target.closest(".btn-edit")) return;
       const teswirler = await teswirlerGetir(mugallym.id);
-      document.querySelector('.theme-btn').style.display = 'none';
       const dil = localStorage.getItem("dil") || "tk";
       const t = dil === "ru" ? {
         tel: "Тел",
@@ -116,7 +117,7 @@ function displaymugallymlar(Sanaw) {
       } : {
         tel: "Tel",
         yasy: "Ýaşy",
-        tejribe: "Tejribe",
+        tejribesi: "Tejribe",
         yer: "Ýaşaýan ýeri",
         nabelli: "Näbelli",
         teswirler: "Teswirler:",
@@ -125,7 +126,7 @@ function displaymugallymlar(Sanaw) {
         teswirYaz: "Teswiriňizi ýazyň...",
         teswirGos: "Teswir Goş",
       };
-
+     const isDark = document.body.classList.contains("dark-mode");
       Swal.fire ({
         title: '',
         html:`
@@ -175,8 +176,8 @@ function displaymugallymlar(Sanaw) {
           </button>
           </div>
          `,
-         background: "#1a1a1a",
-         color: "#fff",
+         background:isDark ? "#1a1a1a" : "#ffffff",
+         color: isDark ? "#fff" : "#000",
          showConfirmButton: false,
          showCloseButton: true,
          grow: false,
@@ -185,7 +186,7 @@ function displaymugallymlar(Sanaw) {
           popup: 'mugallym-popup'
          },
          didClose: () => {
-          document.querySelector('.theme-btn').style.display = 'flex';
+           
          }
       });
     });
@@ -224,16 +225,21 @@ if (gozlegSozi === "") {
 });
 
 const themeBtn = document.getElementById("theme-toggle");
-themeBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  if (document.body.classList.contains("dark-mode")) {
-    themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-  } else {
-    themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-  }
-  const mode = document.body.classList.contains("dark-mode") ? "dark" : "light";
-  localStorage.setItem("theme", mode);
-});
+const themeMobilBtn = document.getElementById("theme-mobil-toggle");
+
+function themeUytget() {
+   document.body.classList.toggle("dark-mode");
+   const isDark = document.body.classList.contains("dark-mode")
+
+   themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+    if (themeMobilBtn) themeMobilBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+ themeBtn.addEventListener("click", themeUytget);
+if (themeMobilBtn) themeMobilBtn.addEventListener ("click", themeUytget);
+ 
+   
 
 function switchTab(tab){
       const isGiris = tab === 'giris';
@@ -261,17 +267,18 @@ if (burger && nav) {
   burger.addEventListener("click", () => {
     nav.classList.toggle("nav-active");
     burger.classList.toggle("toggle");
-    if (nav.classList.contains("nav-active")) {
-      themeBtn.style.display = "none";
-    } else {
-      themeBtn.style.display = "flex";
-    }
   });
 }
 document.addEventListener("DOMContentLoaded", () => {
 
   const nav = document.querySelector(".nav-links");
   const burger = document.querySelector(".burger");
+  document.querySelectorAll(".dropdown-menu li").forEach(li => {
+    li.addEventListener("click", () => {
+      nav.classList.remove("nav-active");
+      burger.classList.remove("toggle");
+    });
+  });
 
   const loginModal = document.getElementById("loginmodal");
   const mugallymModal = document.getElementById("mugallymmodal");
@@ -293,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (addMugallymBtn) addMugallymBtn.style.display =  "flex";
             
             if (loginBtn) {
-                loginBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i><span id="menu-giris">${dil === "ru" ? "Выход" :  "Çykyş"}</span>`;
+                loginBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> <span id="menu-giris">${dil === "ru" ? "Выход" :  "Çykyş"}</span>`;
                 loginBtn.dataset.state = "logout";
             }
         } else {
@@ -348,32 +355,36 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === loginModal || e.target === mugallymModal) closeModal();
     };
 
-    // --- 4. FORMALARYŇ IŞLEÝŞI (Login, Register, Add Teacher) ---
-
-    // Login
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const email = document.getElementById("loginAdy").value;
             const parol = document.getElementById("loginParol").value;
-             const dil = localStorage.getItem("dil") || "tk";
+            const dil = localStorage.getItem("dil") || "tk";
             try {
                 await signInWithEmailAndPassword(auth, email, parol);
                 closeModal();
+                const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "success", 
+                 iconColor: "#2ecc71",
                  title: dil === "ru" ? "Добро пожаловать!" : "Hoş geldiňiz!", 
-                 background: "#1a1a1a", 
-                 color: "#fff", 
+                 background: isDark ? "#1a1a1a" : "#ffffff", 
+                 color:  isDark ? "#fff" : "#000", 
                  timer: 2000, 
                  showConfirmButton: false 
                 });
             } catch (err) {
+                const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "error", 
                  title: dil === "ru" ? "Ошибка!" : "Ýalňyş!", 
                  text:  dil === "ru" ? "Неверный Email или пароль!" : "Email ýa-da parol ýalňyş!", 
-                 background: "#1a1a1a", color: "#fff" 
+                 background: isDark ? "#1a1a1a" : "#ffffff", 
+                 color: isDark ? "#fff" : "#000",
+                 customClass: {
+                 htmlContainer: 'swal-center'
+                 }
                 });
             }
         });
@@ -387,25 +398,35 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!hasabaPanel.classList.contains('active')) return;
             const email = document.getElementById("registerEmail").value;
             const parol = document.getElementById("registerParol").value;
+            const dil = localStorage.getItem("dil") || "tk";
             try {
-                await createUserWithEmailAndPassword(auth, email, parol);
-                closeModal();
-                Swal.fire({ 
+              await createUserWithEmailAndPassword(auth, email, parol);
+              closeModal();
+              const isDark = document.body.classList.contains("dark-mode");
+              Swal.fire({ 
                 icon: "success", 
-                title: "Tassyklama iberildi!", 
-                text: "Emailiňiz tassyklama iberildi, tassyklaň!",
-                background: "#1a1a1a", 
-                color: "#fff", 
+                iconColor: "#2ecc71",
+                title: dil === "ru" ? "Подтверждение отправлено!" : "Tassyklama iberildi!", 
+                text: dil === "ru" ? "На ваш Email отправлено подтверждение, подтвердите!" : "Emailiňiz tassyklama iberildi, tassyklaň!",
+                background: isDark ? "#1a1a1a" : "#ffffff", 
+                color: isDark ? "#fff" : "#000", 
                 timer: 3000, 
-                showConfirmButton: false
+                showConfirmButton: false,
+                customClass: {
+                  htmlContainer: 'swal-center'
+                }
               });
             } catch (err) {
+              const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "error", 
-                 title: "Ýalňyş!", 
-                 text: "Email bar ýa-da parol gysga (min 6 harp)!", 
-                 background: "#1a1a1a", 
-                 color: "#fff" 
+                 title: dil === "ru" ? "Ошибка!" : "Ýalňyş!", 
+                 text: dil === "ru" ? "Email занят или пароль слишком короткий (мин 6 символов)!" : "Email bar ýa-da parol gysga (min 6 harp)!", 
+                 background: isDark ? "#1a1a1a" : "#ffffff", 
+                 color: isDark ? "#fff" : "#000",
+                 customClass: {
+                  htmlContainer: 'swal-center'
+                 } 
                 });
             }
         });
@@ -428,11 +449,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 const reader = new FileReader();
                 reader.onload = function (event) {
                     const tazemugallym = {
-                        id: Date.now(),
+                    id: Date.now(),
                         ady: document.getElementById("mugallymAdy").value.trim(),
                         dersi: document.getElementById("dersi").value.trim(),
                         tel: document.getElementById("mugallymTel").value.trim(),
                         yasy: document.getElementById("mugallymYasy").value.trim(),
+                        tejribe: document.getElementById("mugallymTejribe").value,
+                        salgy:[
+                         document.getElementById("mugallymWelayat").value,
+                         document.getElementById("mugallymEtrap").value,
+                         document.getElementById("mugallymShaher").value,
+                        ].filter(Boolean).join(", "),
                         welayat: document.getElementById("mugallymWelayat").value,
                         etrap: document.getElementById("mugallymEtrap").value,
                         shaher: document.getElementById("mugallymShaher").value,
@@ -454,18 +481,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function googleBilenGir() {
+   const dil = localStorage.getItem("dil") || "tk";
+    const isDark = document.body.classList.contains("dark-mode");
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        const dil = localStorage.getItem("dil") || "tk";
         localStorage.setItem("login", user.email);
-        
         Swal.fire({
             icon: "success",
             title: "ru" ? "Добро пожаловать!" : "Hoş geldiňiz!",
             text: "ru" ? "Вы вошли как" + user.displayName: user.displayName + "hökmünde girildi.",
-            background: "#1a1a1a",
-            color: "#fff",
+            background:  isDark ? "#1a1a1a" : "#ffffff",         
+            color:  isDark ? "#fff" : "#000",
             timer: 2000,
             showConfirmButton: false
         });
@@ -473,30 +500,31 @@ async function googleBilenGir() {
         // Modaly ýapmak
         const loginModal = document.getElementById("loginmodal");
         if (loginModal) loginModal.style.display = "none";
-        
+         
        } catch (error) {
-    console.log("Doly hata kody:", error.code); // Bu bize anyk sebäbi aýdar
+    console.log("Doly hata kody:", error.code);
     console.log("Hata mesaji:", error.message);
     Swal.fire({
         icon: "error",
-        title: "ru" ? "Ошибка!" : "Ýalňyşlyk!",
+        title: dil === "ru" ? "Ошибка!" : "Ýalňyşlyk!",
         text: error.code, 
-        background: "#1a1a1a",
-        color: "#fff"
+        background: isDark ? "#1a1a1a"  : "#ffffff",
+        color: isDark ? "#fff" : "#000",
     });
 }
 }
 
 function mugallymPoz(id) {
    const dil = localStorage.getItem("dil") || "tk";
+    const isDark = document.body.classList.contains("dark-mode");
   Swal.fire({
     title: dil === "ru" ? "Вы хотите удалить?" :"Siz pozmak isleyärsiňizmi?",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: dil === "ru" ? "Да, удалить!" :"Hawa,poz!",
     cancelButtonText: dil === "ru" ?  "Отмена" :"Bes et",
-    background: "#1a1a1a",
-    color: "#fff",
+    background: isDark ? "#1a1a1a" : "#ffffff",
+    color: isDark ? "#fff" : "#000",
   }).then(async(result) => {
     if (result.isConfirmed) {
       const mugallym = mugallymlar.find(m => m.id === Number(id));
@@ -509,8 +537,8 @@ function mugallymPoz(id) {
       Swal.fire({
         title: dil === "ru" ?"Удалено!" :"Pozuldy!",
         icon: "success",
-        background: "#1a1a1a",
-        color: "#fff",
+        background: isDark ? "#1a1a1a" : "#ffffff",
+        color: isDark ? "#fff" : "#000",
         timer: 1500,
         showConfirmButton: false,
       });
@@ -685,6 +713,7 @@ async function mugallymGos(tazemugallym) {
   if (form) form.reset();
   if (modal) modal.style.display = "none";
   const dil = localStorage.getItem("dil") || "tk"
+  const isDark = document.body.classList.contains("dark-mode");
   Swal.fire({
     icon: "success",
     title: dil === "ru" ? "Учитель добавлен!" : "Mugallym goşuldy!",
@@ -692,9 +721,12 @@ async function mugallymGos(tazemugallym) {
     showConfirmButton: false,
     timer: 2000,
     timerProgressBar: true,
-    background: "#1a1a1a",
-    color: "#fff",
-    iconColor: "#2ecc71",
+    background: isDark ? "#1a1a1a" : "#ffffff",
+    color: isDark ? "#fff" : "#000",
+    iconColor: "#057031",
+    customClass: {
+      htmlContainer: 'swal-center'
+    }
   });
 
   setTimeout(() => {
@@ -836,12 +868,10 @@ const diller = {
     "menu-giris": "Giriş",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "Size haýsy ugurdan bilim bermeli?", 
-    "search-placeholder-text": "Ders gözle... (meselem: Matematika)", 
+    "search-placeholder-text": "Ders gözle... (meselem: Matematika)",
     "search-btn": "Gözle",
     "filter-all": "Ählisi",
-    "filter-math": "Matematika",
-    "filter-english": "Iňlis dili",
-    "filter-it": "Informatika",
+    "nav-dersler": "Dersler",
     "select-welayat": "- Ähi welayat -",
     "select-etrap": "- Ähi etrap -",
     "select-shaher": "- Ähi şäher -",
@@ -869,12 +899,10 @@ const diller = {
     "menu-giris": "Вход",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "По какому направлению вы хотите учиться?",
-    "search-placeholder-text": "Поиск предмета... (например: Математика)", 
+    "search-placeholder-text": "Поиск предмета... (например: Matematika)", 
     "search-btn": "Найти",
     "filter-all": "Все",
-    "filter-math": "Математика",
-    "filter-english": "Английский язык",
-    "filter-it": "Информатика",
+    "nav-dersler": "Предметы",
     "select-welayat": "- Все велаяты -",
     "select-etrap": "- Все этрапы -",
     "select-shaher":   "- Все города -",
@@ -891,7 +919,7 @@ const diller = {
     "hasaba-yada": "или",
     "google-hasaba": "Войти через Google",
     "giris-link": "Войти",
-     "biz-hakda-title": "О нас",
+    "biz-hakda-title": "О нас",
     "biz-hakda-desc": '"Mugallym Tap" — платформа для поиска лучших учителей в Туркменистане. Наша цель — помочь каждому ученику легко найти опытного учителя по своему направлению.',
     "biz-yer": "Ашхабад, Туркменистан",
   },

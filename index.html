@@ -7,37 +7,57 @@
     <title>Mugallym Tap - Hyzmatlar</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="css/all.min.css"/>
-    <link rel="icon" type="image/png" href="sapka.png">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' 
+    viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23007bff'/>
+    <text x='50' y='72' font-size='65' font-weight='bold' text-anchor='middle' fill='white'>B</text></svg>">
 
   </head>
   <body id="top">
     <header>
+       
       <div class="burger" id="burger">
         <div class="line1"></div>
         <div class="line2"></div>
         <div class="line3"></div>
       </div>
       <nav class="nav-links" id="nav-menu">
-        <a href="#top"><i class="fa-solid fa-house"></i><span id="menu-bas">Baş Sahypa</span></a>
+
+         <div class="dil-secici-mobil">
+          <button onclick="dilUytget('tk')" class="dil-btn">
+            <img src="tm.png" alt="TM">
+          </button>
+          <button onclick="dilUytget('ru')" class="dil-btn">
+            <img src="ru.png" alt="RU">
+          </button>
+           <button id="theme-mobil-toggle" class="theme-mobil-btn">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+
+        
+         
+       
+        <a href="#top"><i class="fa-solid fa-house"></i> <span id="menu-bas">Baş Sahypa</span></a>
         <a href="#" id="add-mugallym-btn"
-          ><i class="fa-solid fa-user-plus"></i> <span id="menu-mugallym">Mugallym Bol</span></a>
+        <a href="#top"><i class="fa-solid fa-user-plus"></i> <span id="menu-mugallym">Mugallym Bol</span></a>
 
         <div class="dropdown-container">
           <a href="#" id="category-btn">
             <i class="fa-solid fa-layer-group"></i><span id="nav-dersler">Dersler</span>
             </a>
           <ul class="dropdown-menu" id="category-dropdown">
-            <li onclick="filtermugallymlar('Ählisi')" id="drop-all">Ählisi</li>
-            <li onclick="filtermugallymlar('Matematika')" id="drop-math">Matematika</li>
-            <li onclick="filtermugallymlar('iňlis dili')" id="drop-english">Iňlis dili</li>
-            <li onclick="filtermugallymlar('Informatika')"id="drop-it">Informatika</li>
+            <li onclick="filtermugallymlar('Ählisi')">Ählisi</li>
+            <li onclick="filtermugallymlar('Matematika')">Matematika</li>
+            <li onclick="filtermugallymlar('iňlis dili')">Iňlis dili</li>
+            <li onclick="filtermugallymlar('Informatika')">Informatika</li>
           </ul>
         </div>
 
         <a href="tel:+99361122234" class="call-action">
-          <i class="fa-solid fa-phone"></i><span id="menu-jan">Jaň Et</span></a>
+          <i class="fa-solid fa-phone"></i> <span id="menu-jan">Jaň Et</span></a>
       <a href="#" id="login-btn">
         <i class="fa-solid fa-user"></i> <span id="menu-giris">Giriş</span></a>
+
       </nav>
       <div class="dil-secici">
         <button onclick="dilUytget('tk')" class="dil-btn" id="dil-tk">
@@ -55,7 +75,10 @@
     </header>
 
     <main>
+      <div class="hero-logo">
+      <i class="fas fa-graduation-cap"></i>
      <h1 BILIM id="hero-title">BILIM OJAGY</h1>
+    </div>
       <p id="hero-subtitle">Size haýsy ugurdan bilim bermeli?</p>
 
       <div class="search-box">
@@ -111,7 +134,7 @@
              <span id="tel-error">+993 bilen başlamaly!</span>
             <input type="number" id="mugallymYasy" placeholder="Ýaşyňyz"required>
             </div>
-
+            
             <div class="input-group">
               <input type="text" id="mugallymTejribe" placeholder="Tejribäňiz (meselem: 5 ýyl)" required/>
                <select id="mugallymWelayat" onchange="formWelayatChange()" required>

@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
 header {
@@ -15,11 +14,15 @@ header {
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+} 
 
 .swal2-html-container {
   text-align: left;
-  padding: 0 10px;
+  padding: 0 25px;
+}
+
+.swal-center {
+  text-align: center;
 }
 
 .swal2-html-container p {
@@ -27,11 +30,46 @@ header {
   line-height: 1.6;
 }
 
+.swal2-popup .teswir-input,
+.swal2-popup .teswir-textarea {
+  background: #f0f0f0;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+body.dark-mode .swal2-popup .teswir-input,
+body.dark-mode .swal2-popup .teswir-textarea {
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark-mode .swal2-popup .teswir-kart {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+body.dark-mode .swal2-popup .teswir-kart strong {
+  color: #fff;
+}
+ 
+
+.swal2-popup p {
+  color: inherit;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.swal2-popup strong {
+  color: inherit;
+}
+
 .mugallym-profil {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
+  margin-top: 10px;
 }
 
 .profil-surat {
@@ -86,6 +124,7 @@ header {
     margin: 0 10px;
     position: relative;
     border-radius: 8px;
+    gap: 7px;
   }
 
   .nav-links a:hover {
@@ -146,7 +185,6 @@ header {
   }
 }
 
-
 #services-container {
   display: flex;
   flex-wrap: wrap;
@@ -156,7 +194,7 @@ header {
 }
 
 .card {
-  background: #e3e5e8;
+  background: #e0eaff;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -361,7 +399,6 @@ body.dark-mode .search-box input {
   background: linear-gradient(135deg, #0056b3 0%, #004494 100%);
 }
 
-
 #mugallymmodal .close {
   position: absolute;
   top: 10px;
@@ -403,6 +440,14 @@ body.dark-mode .search-box input {
   gap: 12px;
 }
 
+#surat-label {
+  color: #111;
+}
+
+body.dark-mode #surat-label {
+  color: #fff;
+}
+
 .burger div {
   width: 25px;
   height: 3px;
@@ -412,21 +457,18 @@ body.dark-mode .search-box input {
 }
 
 .btn-delete {
-  all: unset;
-  box-sizing: border-box;
-  background-color: #ff4d4d;
-  color: white;
+  position: static;
+  background: #e74c3c;
   border: none;
-  width: 35px;
-  border-radius: 50%;
-  height: 35px;
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
-  flex-shrink: 0;
-  font-size: 14px;
+  transition: transform 0.5s
 }
 
 .btn-delete:hover {
@@ -541,13 +583,39 @@ body.dark-mode .card:hover {
   justify-content: center;
   border: none;
   right: 20px;
-  background-color: #ffffff;
-  color: #007bff;
+  background-color: #007bff;
+  color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   font-weight: bold;
   z-index: 1050;
   transition: 0.3s ease-in-out;
   transform: none;
+}
+
+.theme-mobil {
+  display: none;
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.theme-mobil-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-mobil-btn i {
+  font-size: 22px;
+  transition: transform 0.3s ease;
+}
+
+.theme-mobil-btn:active i {
+  transform: rotate(30deg);
 }
 
 .filter-buttons {
@@ -572,6 +640,10 @@ body.dark-mode .card:hover {
 .filter-btn:hover, .filter-btn.active {
   background: #007bff;
   color: white;
+}
+
+#loginmodal {
+  z-index: 999;
 }
 
 #login-modal-content {
@@ -707,7 +779,7 @@ body.dark-mode #login-modal-content .divider::after {
 }
 
 .teswir-bolum {
-  margin-top: 10px;
+  margin-top: 5px;
   text-align: left;
 }
 
@@ -719,7 +791,12 @@ body.dark-mode #login-modal-content .divider::after {
 .teswirler-container {
   max-height: 100px;
   overflow-y: auto;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.teswirler-container:empty {
+  max-height: 0;
+  margin-bottom: 0;
 }
 
 .teswir-kart {
@@ -728,6 +805,25 @@ body.dark-mode #login-modal-content .divider::after {
   padding: 8px 12px;
   margin-bottom: 8px;
   border-left: 3px solid #007bff;
+  color: #fff;
+}
+
+.swal2-popup .teswir-kart {
+  background: #f0f0f0;
+  color: #111;
+}
+
+body:not(.dark-mode) .teswir-kart p,
+.swal2-popup .teswir-kart strong {
+  color: #000;
+}
+
+.swal2-popup .profil-ady {
+  color: #000;
+}
+
+.swal2-popup .profil-ady {
+  color: #007bff;
 }
 
 .teswir-kart strong {
@@ -736,7 +832,7 @@ body.dark-mode #login-modal-content .divider::after {
 }
 
 .teswir-kart p {
-  margin: 4px 0 0 0;
+  margin: 4px 0 0 0; 
   font-size: 14px;
   color: #ccc;
   padding-left: 0;
@@ -800,7 +896,8 @@ body.dark-mode #login-modal-content .divider::after {
   color: #888;
   font-size: 13px;
   text-align: center;
-  padding: 10px 0;
+  padding: 0;
+  margin: 0;
 }
 
 .modal {
@@ -990,7 +1087,6 @@ body.dark-mode.google-btn:hover {
   width: 20px;
 }
 
-
 .divider {
   display: flex;
   align-items: center;
@@ -1136,6 +1232,7 @@ body.dark-mode .yer-suzguc select {
 .dil-bolumi {
   display: flex;
   gap: 8px;
+   
 }
 
 .dil-btn {
@@ -1162,6 +1259,30 @@ body.dark-mode .yer-suzguc select {
  border: 2px solid white;
  border-radius: 4px;
 }
+
+.dil-secici-mobil {
+    display: none;
+}
+
+.hero-logo i {
+ font-size: 45px;
+ object-fit: contain;
+ color: #0d6efd;
+}
+
+.hero-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 7px;
+}
+
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+
 
 @media (max-width: 768px) {
   .filter-buttons {
@@ -1210,6 +1331,10 @@ body.dark-mode .yer-suzguc select {
 
   .nav-active {
     right: 0;
+  }
+
+   body.nav-active {
+    overflow: hidden;
   }
 
   .nav-links a {
@@ -1269,20 +1394,6 @@ body.dark-mode .yer-suzguc select {
     border: 1px solid #333;
   }
 
-  .yer-suzguc {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-  }
-
-  .yer-suzguc select {
-    width: 90%;
-    padding: 10px 14px;
-    font-size: 15px;
-    border-radius: 10px;
-  }
-
   #mugallymmodal .modal-content {
     padding: 20px;
     width: 95%;
@@ -1312,12 +1423,15 @@ body.dark-mode .yer-suzguc select {
 
   #services-container {
     gap: 20px;
-    padding: 20px 10px;
+    padding: 10px;
+    margin-top: 0px;
+    margin-bottom: 5px;
   }
 
   .card-buttons {
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
   }
 
   .card-buttons buttons.btn-call {
@@ -1329,7 +1443,10 @@ body.dark-mode .yer-suzguc select {
     width: 95%;
   }
 
-  
+  main {
+    padding-bottom: 15px 23px 10px 23px; 
+    margin-bottom: 10px;
+  }
 
   main h1 {
     font-size: 2.2rem;
@@ -1371,7 +1488,8 @@ body.dark-mode .yer-suzguc select {
     align-items: center;
     gap: 8px;
     padding: 10px 15px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    margin-top: 10px;
   }
 
   .yer-suzguc select {
@@ -1379,6 +1497,30 @@ body.dark-mode .yer-suzguc select {
     padding: 8px 12px;
     font-size: 13px;
     border-radius: 10px;
+  }
+
+  .dil-secici-mobil {
+    display: flex;
+    gap: 20px;
+  }
+
+  .dil-secici {
+    display: none;
+  }
+  
+  .theme-mobil {
+    display: flex;
+    padding: 10px 0;
+    gap: 15px;
+    
+  }
+
+  #theme-toggle {
+    display: none;
+  }
+
+  .hero-logo i {
+    display: none;
   }
 
 }
