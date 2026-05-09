@@ -15,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
  
 
@@ -400,14 +401,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const parol = document.getElementById("registerParol").value;
             const dil = localStorage.getItem("dil") || "tk";
             try {
-              await createUserWithEmailAndPassword(auth, email, parol);
+              const userCredential = await createUserWithEmailAndPassword(auth, email, parol);
               closeModal();
               const isDark = document.body.classList.contains("dark-mode");
               Swal.fire({ 
                 icon: "success", 
                 iconColor: "#2ecc71",
-                title: dil === "ru" ? "Подтверждение отправлено!" : "Tassyklama iberildi!", 
-                text: dil === "ru" ? "На ваш Email отправлено подтверждение, подтвердите!" : "Emailiňiz tassyklama iberildi, tassyklaň!",
+                title: dil === "ru" ? "Успешно!" : "Üstünlikli!", 
+                text: dil === "ru" ? "Вы успешно зарегистрированы!" : "Hasabyňyz döredildi!",
                 background: isDark ? "#1a1a1a" : "#ffffff", 
                 color: isDark ? "#fff" : "#000", 
                 timer: 3000, 
@@ -489,12 +490,16 @@ async function googleBilenGir() {
         localStorage.setItem("login", user.email);
         Swal.fire({
             icon: "success",
-            title: "ru" ? "Добро пожаловать!" : "Hoş geldiňiz!",
-            text: "ru" ? "Вы вошли как" + user.displayName: user.displayName + "hökmünde girildi.",
+            iconColor: "#2ecc71",
+            title: dil === "ru" ? "Добро пожаловать!" : "Hoş geldiňiz!",
+            text: dil === "ru" ? "Вы вошли в систему!" : "Siz ulgama girdiňiz!",
             background:  isDark ? "#1a1a1a" : "#ffffff",         
             color:  isDark ? "#fff" : "#000",
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: false,
+            customClass: {
+              htmlContainer: 'swal-centec'
+            }     
         });
 
         // Modaly ýapmak
@@ -864,7 +869,7 @@ const diller = {
   tk: {
     "menu-bas": "Baş Sahypa",
     "menu-mugallym": "Mugallym Bol",
-    "menu-jan": "Jaň Et",
+    "menu-jan": "Habarlaşmak",
     "menu-giris": "Giriş",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "Size haýsy ugurdan bilim bermeli?", 
@@ -1005,6 +1010,18 @@ const saklananDil = localStorage.getItem("dil") || "tk";
 console.log(saklananDil);
 dilUytget(saklananDil);
 
+function showContact(e) {
+  e.preventDefault();
+  document.getElementById("nav-menu").classList.remove("nav-active");
+  document.getElementById("burger").classList.remove("toggle")
+  document.getElementById("contact-modal").classList.add("active");
+}
+function closeModal() {
+  document.getElementById("contact-modal").classList.remove("active");
+} 
+
+window.showContact = showContact;
+window.closeModal = closeModal;
 window.dilUytget = dilUytget;
 window.formWelayatChange = formWelayatChange;
 window.formShaherChange = formShaherChange;

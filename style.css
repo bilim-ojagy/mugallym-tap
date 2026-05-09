@@ -23,6 +23,12 @@ header {
 
 .swal-center {
   text-align: center;
+  margin-top: 20px;
+}
+
+.swal-centec {
+  margin-top: 20px;
+  text-align: center;
 }
 
 .swal2-html-container p {
@@ -689,77 +695,79 @@ body.dark-mode #login-modal-content .divider::after {
   background: #444;
 }
 
- .biz-hakda {
-  background: #e3e5e8;
-  padding: 60px 20px;
-  text-align: center;
-  margin-top: 40px;
- }
- 
- .biz-hakda h2 {
-  font-size: 2rem;
-  color: #007bff;
-  margin-bottom: 10px;
- }
-
- .biz-hakda p {
-  color: #555;
-  font-size: 1rem;
-  margin-bottom: 8px;
- }
-
- .biz-hakda-info {
-  display: flex;
+#contact-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  display: none;
   justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  margin: 20px 0;
- }
-
- .biz-hakda-info p {
-  display: flex;
   align-items: center;
-  gap: 8px;
-  color: #333;
- }
+  z-index: 9999;
+}
 
- .biz-hakda-social a {
-  color: #007bff;
-  font-size: 28px;
-  transition: 0.3s;
- }
+.modal-contenc span {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 20px;
+}
 
- .biz-hakda-social a:hover {
-  color: #0056b3;
-  transform: scale(1.2);
- }
+.modal-contenc {
+  position: relative;
+  background: rgb(172, 190, 227);
+  color: #000;
+  max-width: 780px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
- body.dark-mode .biz-hakda h2 {
-  color: #4da3ff;
- }
+.modal-contenc a  {
+  color: #0d6efd
+}
 
- body.dark-mode .biz-hakda p {
+.modal-contenc p {
+  font-size: 17px;
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+
+body.dark-mode .modal-contenc {
+  background: #1e1e2e;
+  color: white;
+}
+
+body.dark-mode .modal-contenc a {
+  color: #7eb3ff;
+}
+
+body.dark-mode .modal-contenc a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+}
+
+body.dark-mode .modal-contenc p {
   color: #ccc;
- }
+}
 
- body.dark-mode .biz-hakda-info p {
-  color: #fff;
- }
+.modal-contenc a:hover {
+  background: rgba(151, 153, 155, 0.4);
+  border-radius: 8px;
+  text-decoration-color: #0d6efd;
+}
 
- body.dark-mode .biz-hakda {
-  background: #1a1a1a;
- }
 
- .biz-hakda-desc {
-  max-width: 600px;
-  margin: 0 auto 20px;
-  font-size: 1rem;
-  line-height: 1.7;
- }
 
- body.dark-mode .biz-hakda-desc {
-  color: #ccc;
- }
+
+#contact-modal.active {
+  display: flex;
+}
 
 .yer-suzguc {
   display: flex;
@@ -1282,8 +1290,6 @@ body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-
-
 @media (max-width: 768px) {
   .filter-buttons {
     display: none;
@@ -1523,4 +1529,29 @@ body {
     display: none;
   }
 
+  #contact-modal.active {
+    display: flex;
+  }
+
+  #contact-modal {
+    align-items: flex-end;
+  }
+
+  .modal-contenc a  {
+    color: #0d6efd;
+    justify-content: center;
+  }
+
+  .modal-contenc {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 24px;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {transform: translateY(100%);}
+    to {transform: translateY(0);}
+  }
 }
