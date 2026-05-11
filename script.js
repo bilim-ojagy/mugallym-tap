@@ -17,7 +17,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
- 
 
    async function mugallymlaryGetir() {
     const querySnapshot = await getDocs(collection(db, "mugallymlar"));
@@ -435,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mugallym Goşmak
     if (mugallymForm) {
-        mugallymForm.addEventListener("submit", (e) => {
+        mugallymForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const tel = document.getElementById("mugallymTel").value.trim();
             const telError= document.getElementById("tel-error");
@@ -447,8 +446,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } 
             const file = document.getElementById("mugallymSurat").files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
+              const surat = await window.suratKicelt(file);
+                
                     const tazemugallym = {
                     id: Date.now(),
                         ady: document.getElementById("mugallymAdy").value.trim(),
@@ -464,21 +463,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         welayat: document.getElementById("mugallymWelayat").value,
                         etrap: document.getElementById("mugallymEtrap").value,
                         shaher: document.getElementById("mugallymShaher").value,
-                        surat: event.target.result,
+                        surat: surat,
                         description: "Siziň hyzmatyňyzda!",
                         baha: 0,
                         bahaSany: 0,
                         email: localStorage.getItem("login"),
-                    };
+                     };
                     mugallymGos(tazemugallym);
                     closeModal();
                     mugallymForm.reset();
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-});
+                }
+            });
+         }
+     });
 
 
 async function googleBilenGir() {
@@ -703,6 +700,26 @@ function yerSuzguc() {
     netije = mugallymlar.filter(m => m.welayat === w);
   }
   displaymugallymlar(netije);
+}
+
+window.suratKicelt = function(file, maxWidth = 800) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ration = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * ration;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 
@@ -1018,7 +1035,21 @@ function showContact(e) {
 }
 function closeModal() {
   document.getElementById("contact-modal").classList.remove("active");
+   if (mugallymForm) mugallymForm.reset();
+  const suratInput = document.getElementById("mugallymSurat");
+  if (suratInput) suratInput.value = "";
 } 
+
+window.updateFileName = function(input) {
+  const text = document.getElementById("upload-text");
+  if (input.files && input.files[0]) {
+    text.textContent = input.files[0].name;
+  } else {
+    text.textContent = "Surat saýlaň";
+  }
+}
+
+
 
 window.showContact = showContact;
 window.closeModal = closeModal;
