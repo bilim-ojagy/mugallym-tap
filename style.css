@@ -1454,7 +1454,7 @@ body {
  }
 
  #mugallymmodal {
-   display: flex;
+   display: none;
   align-items: flex-start;
   position: fixed;
   top: 0;
@@ -1485,7 +1485,6 @@ body {
     gap: 8px;
   }
    
-
   .mugallym-popup {
     max-height: 90vh;
     overflow-y: auto;
@@ -1583,8 +1582,6 @@ body {
   select {
     padding: 2px;
   }
-
-
 
   .dil-secici-mobil {
     display: flex;

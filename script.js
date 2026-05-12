@@ -702,7 +702,7 @@ function yerSuzguc() {
   displaymugallymlar(netije);
 }
 
-window.suratKicelt = function(file, maxWidth = 800) {
+window.suratKicelt = function(file, maxWidth = 400) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
