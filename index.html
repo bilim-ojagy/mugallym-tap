@@ -59,6 +59,7 @@
           <div id="contact-modal">
             <div class="modal-contenc">
               <span onclick="closeModal()">✕</span>
+              <h3>Habarlaşmak</h3>
               <p class="biz-hakda-desc">"Mugallym Tap"- Türkmenistanda iň gowy
                 mugallymy tapmak üçin döredilen platforma. 
                 Biziň maksadymyz her bir okuwçy öz ugrundan tejribeli mugallymy
@@ -118,24 +119,30 @@
          </div>
       
            <div class="yer-suzguc">
-              <select id="suzgucWelayat" onchange="suzgucWelayatChange()">
-                <option value="">- Ähli welaýat -</option>
-                <option value="Aşgabat">Aşgabat</option>
-                <option value="Ahal">Ahal</option>
-                <option value="Balkan">Balkan</option>
-                <option value="Daşoguz">Daşoguz</option>
-                <option value="Lebap">Lebap</option>
-                <option value="Mary">Mary</option>
-              </select>
-              <select id="suzgucEtrap" onchange="suzgucEtrapChange()" disabled>
-                <option value="">- Ähli etrap -</option>
-              </select>
-              <select id="suzgucShaher" onchange="yerSuzguc()" disabled>
-                <option value="">- Ähli şäher -</option>
-              </select>
-            </div>
-            <section class="services" id="services-container"></section>
+             <div class="custom-select" id="welayatDD">
+    <div class="cs-selected" onclick="toggleDD('welayatDD')">- Ähli welaýat -</div>
+    <div class="cs-options">
+      <div onclick="selectDD('welayatDD', '', '- Ähli welaýat -')">- Ähli welaýat -</div>
+      <div onclick="selectDD('welayatDD', 'Aşgabat', 'Aşgabat')">Aşgabat</div>
+      <div onclick="selectDD('welayatDD', 'Ahal', 'Ahal')">Ahal</div>
+      <div onclick="selectDD('welayatDD', 'Balkan', 'Balkan')">Balkan</div>
+      <div onclick="selectDD('welayatDD', 'Daşoguz', 'Daşoguz')">Daşoguz</div>
+      <div onclick="selectDD('welayatDD', 'Lebap', 'Lebap')">Lebap</div>
+      <div onclick="selectDD('welayatDD', 'Mary', 'Mary')">Mary</div>
+    </div>
+  </div>
 
+   <div class="custom-select cs-disabled" id="etrapDD">
+    <div class="cs-selected" onclick="toggleDD('etrapDD')">- Ähli etrap -</div>
+    <div class="cs-options"></div>
+  </div>
+
+  <div class="custom-select cs-disabled" id="shaherDD">
+    <div class="cs-selected" onclick="toggleDD('shaherDD')">- Ähli şäher -</div>
+    <div class="cs-options"></div>
+  </div>
+</div>
+              
     <div id="mugallymmodal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>

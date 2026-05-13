@@ -275,10 +275,13 @@ main h1 {
   -webkit-text-fill-color: transparent; 
 }
 
+body.dark-mode #hero-subtitle {
+  color: #ccc;
+}
 
-main p {
-  font-size: 1.2rem;
-  color: #555;
+#hero-subtitle {
+  color: #111;
+   font-size: 1.2rem;
   font-weight: 400;
   max-width: 600px;
   margin: 0 auto 30px auto;
@@ -304,6 +307,14 @@ main h1:hover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
   border: 1px solid #eee;
 }
+
+ #searchInput ::placeholder {
+    font-size: 16px;
+  }
+
+  #searchInput {
+    font-size: 16px;
+  }
 
 .search-box input {
   flex: 1;
@@ -331,11 +342,6 @@ main h1:hover {
   background: #0056b3;
   transform: scale(1.05); 
 }
-
-.search-box input::placeholder {
-  font-size: 13px;
-}
-
 
 body.dark-mode main {
   background: linear-gradient(to bottom, #121212, #1a1a1a);
@@ -453,7 +459,6 @@ body.dark-mode #mugallymmodal .close:hover {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
 }
-
 
 #mugallymmodal h3 {
   font-size: 1.8rem;
@@ -575,7 +580,6 @@ body.dark-mode #mugallymForm input {
   cursor: pointer;
   z-index: 2001;
 }
-
 
 .btn:hover {
   background: #0056b3;
@@ -747,10 +751,14 @@ body.dark-mode #login-modal-content .divider::after {
   font-size: 20px;
 }
 
+.modal-contenc span:hover {
+  color: #ff0000;
+}
+
 .modal-contenc {
   position: relative;
-  background: rgb(172, 190, 227);
-  color: #000;
+  background: white;
+  color: #333;
   max-width: 780px;
   padding: 30px;
   border-radius: 20px;
@@ -758,6 +766,15 @@ body.dark-mode #login-modal-content .divider::after {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.modal-contenc h3 {
+  color: #004494;
+  font-size: 22px;
+}
+
+body.dark-mode .modal-contenc h3 {
+  color: #fff;
 }
 
 .modal-contenc a  {
@@ -772,7 +789,7 @@ body.dark-mode #login-modal-content .divider::after {
 
 
 body.dark-mode .modal-contenc {
-  background: #1e1e2e;
+  background: #1e1e1e;
   color: white;
 }
 
@@ -808,24 +825,75 @@ body.dark-mode .modal-contenc p {
   margin-bottom: 20px;
 }
 
-.yer-suzguc select {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+.custom-select {
+  position: relative;
+  min-width: 160px;
+  user-select: none;
+}
+
+.cs-selected {
+  background: #e3e5e8;
+  color: #222;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.dark-mode .cs-selected {
+  background: #2d2d2d;
+  color: white;
+}
+
+.cs-selected::after {
+  content: '▾';
+  margin-left: 8px;
+}
+
+.cs-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #e3e5e8;
+  color: #222;
+  border-radius: 6px;
+  z-index: 999;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+body.dark-mode .cs-options {
+  background: #2d2d2d;
+  color: white;
+}
+
+.cs-options div {
+  padding: 8px 16px;
   cursor: pointer;
 }
 
- select {
-  border-radius: 12px;
-  background:white;
-  color:#111;
- 
+.cs-options div:hover {
+  background: #ddd9d9;
+  color: #1a7bff;
 }
 
-body.dark-mode select {
-  background: #2d2d2d;
-  color: white;
+
+body.dark-mode .cs-options div:hover {
+  background: #3a3a3a;
+  color: #1a7bff;
+}
+
+.cs-options.open {
+  display: block;
+}
+
+.cs-disabled .cs-selected {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .teswir-bolum {
@@ -1454,7 +1522,7 @@ body {
  }
 
  #mugallymmodal {
-   display: none;
+  display: none;
   align-items: flex-start;
   position: fixed;
   top: 0;
@@ -1543,6 +1611,10 @@ body {
     padding: 10px 12px;
   }
 
+  #searchInput {
+    font-size: 13px;
+  }
+
   .search-box button#searchBtn {
     padding: 10px 18px;
     font-size: 14px;
@@ -1564,24 +1636,27 @@ body {
   }
 
   .yer-suzguc {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 15px;
-    margin-bottom: 0px;
-    margin-top: 10px;
-  }
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  flex-wrap: nowrap; /* hatar bolsun */
+}
 
-  .yer-suzguc select {
-    width: 85%;
-    padding: 8px 12px;
-    font-size: 13px;
-    border-radius: 10px;
-  }
+.custom-select {
+  min-width: 0;
+  flex: 1; /* deň paýlaşsyn */
+  max-width: 32%; /* üçüsi deň sygýar */
+}
 
-  select {
-    padding: 2px;
-  }
+.cs-selected {
+  padding: 6px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* uzyn ýazgy ... bilen kesilsin */
+}
 
   .dil-secici-mobil {
     display: flex;

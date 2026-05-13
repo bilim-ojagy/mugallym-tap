@@ -346,6 +346,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeModal = () => {
         loginModal.style.display = "none";
         mugallymModal.style.display = "none";
+
+        const loginAdy = document.getElementById("loginAdy");
+        const loginParol = document.getElementById("loginParol");
+        const registerEmail = document.getElementById("registerEmail");
+        const registerParol = document.getElementById("registerParol");
+
+        if (loginAdy) loginAdy.value = "";
+        if (loginParol) loginParol.value = "";
+        if (registerEmail) registerEmail.value = "";
+        if (registerParol) registerParol.value = "";
     };
 
 
@@ -603,100 +613,120 @@ const locationData = {
   }
 };
 
-function formWelayatChange(){
-    const w = document.getElementById("mugallymWelayat").value;
-    const etrapEl = document.getElementById("mugallymEtrap");
-    const shaherEl = document.getElementById("mugallymShaher");
-    etrapEl.innerHTML = '<option value="">- Etrap saýlaň -</option>';
-    shaherEl.innerHTML = '<option value="">- Şäher saýlaň -</option>';
-    shaherEl.disabled = true;
-    if (w && locationData[w]){
-      Object.keys (locationData[w]).forEach(e =>{
-        const opt = document.createElement("option");
-        opt.value = e; opt.textContent = e;
-        etrapEl.appendChild(opt);
-      });
-      etrapEl.disabled = false;
-    }else{
-      etrapEl.disabled = true;
-  }    
+const ddValues = { welayatDD: '', etrapDD: '', shaherDD: '' };
+
+function toggleDD(id) {
+  const dd = document.getElementById(id);
+  if (dd.classList.contains('cs-disabled')) return;
+  const opts = dd.querySelector('.cs-options');
+  opts.classList.toggle('open');
 }
 
-function formEtrapChange(){
-  const w = document.getElementById("mugallymWelayat").value;
-  const e = document.getElementById("mugallymEtrap").value;
-  const shaherEl = document.getElementById("mugallymShaher");
-  shaherEl.innerHTML = '<option value="">- Şäher saýlaň -</option>';
-  if (w && e && locationData[w][e]) {
-    locationData[w][e].forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s; opt.textContent = s;
-      shaherEl.appendChild(opt);
+function selectDD(id, value, label) {
+  const dd = document.getElementById(id);
+  dd.querySelector('.cs-selected').childNodes[0].textContent = label;
+  dd.querySelector('.cs-options').classList.remove('open');
+  ddValues[id] = value;
+
+  if (id === 'welayatDD') suzgucWelayatChange();
+  if (id === 'etrapDD') suzgucEtrapChange();
+  if (id === 'shaherDD') yerSuzguc();
+}
+
+// Dropdown enable/disable
+function enableDD(id) {
+  document.getElementById(id).classList.remove('cs-disabled');
+}
+function disableDD(id) {
+  document.getElementById(id).classList.add('cs-disabled');
+}
+
+// Etrap options dolduryjy
+function setEtrapOptions(welayat) {
+  const dd = document.getElementById('etrapDD');
+  const opts = dd.querySelector('.cs-options');
+  opts.innerHTML = '';
+  addOption(opts, '', '- Ähli etrap -', 'etrapDD');
+  if (welayat && locationData[welayat]) {
+    Object.keys(locationData[welayat]).forEach(e => {
+      addOption(opts, e, e, 'etrapDD');
     });
-    shaherEl.disabled = false;
-  }else{
-    shaherEl.disabled = true;
-  }  
-}
-function formShaherChange() {
-
+  }
+  dd.querySelector('.cs-selected').childNodes[0].textContent = '- Ähli etrap -';
+  ddValues['etrapDD'] = '';
 }
 
-function suzgucWelayatChange(){
-  const w = document.getElementById("suzgucWelayat").value;
-  const etrapEl = document.getElementById("suzgucEtrap");
-  const shaherEl = document.getElementById("suzgucShaher");
-  etrapEl.innerHTML = '<option value="">- Ähli etrap -</option>';
-  shaherEl.innerHTML = '<option value="">- Ähli şäher -</option>';
-  shaherEl.disabled = true;
-  if (w  && locationData[w]) {
-   Object.keys(locationData[w]).forEach(e => {
-      const opt = document.createElement("option");
-      opt.value = e; opt.textContent = e;
-      etrapEl.appendChild(opt);
+function setShaherOptions(welayat, etrap) {
+  const dd = document.getElementById('shaherDD');
+  const opts = dd.querySelector('.cs-options');
+  opts.innerHTML = '';
+  addOption(opts, '', '- Ähli şäher -', 'shaherDD');
+  if (welayat && etrap && locationData[welayat][etrap]) {
+    locationData[welayat][etrap].forEach(s => {
+      addOption(opts, s, s, 'shaherDD');
     });
-    etrapEl.disabled = false;
-  }else{
-    etrapEl.disabled = true;
-  }  
+  }
+  dd.querySelector('.cs-selected').childNodes[0].textContent = '- Ähli şäher -';
+  ddValues['shaherDD'] = '';
+}
+
+function addOption(container, value, label, ddId) {
+  const div = document.createElement('div');
+  div.textContent = label;
+  div.onclick = () => selectDD(ddId, value, label);
+  container.appendChild(div);
+}
+
+// Daşardan ýapyk ýagdaýda
+document.addEventListener('click', function(e) {
+  document.querySelectorAll('.cs-options.open').forEach(opts => {
+    if (!opts.closest('.custom-select').contains(e.target)) {
+      opts.classList.remove('open');
+    }
+  });
+});
+
+
+function suzgucWelayatChange() {
+  const w = ddValues['welayatDD'];
+  setEtrapOptions(w);
+  setShaherOptions('', '');
+  disableDD('shaherDD');
+  if (w && locationData[w]) {
+    enableDD('etrapDD');
+  } else {
+    disableDD('etrapDD');
+  }
   yerSuzguc();
 }
 
-function suzgucEtrapChange(){
-  const w = document.getElementById("suzgucWelayat").value;
-  const e = document.getElementById("suzgucEtrap").value;
-  const shaherEl = document.getElementById("suzgucShaher");
-  shaherEl.innerHTML = '<option value="">- Ähli şäher -</option>';
-  if (w  && e && locationData[w][e]) {
-locationData[w][e].forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s; opt.textContent = s;
-      shaherEl.appendChild(opt);
-    });
-    shaherEl.disabled = false;
-  }else{
-    shaherEl.disabled = true;
-  }  
+function suzgucEtrapChange() {
+  const w = ddValues['welayatDD'];
+  const e = ddValues['etrapDD'];
+  setShaherOptions(w, e);
+  if (w && e && locationData[w][e]) {
+    enableDD('shaherDD');
+  } else {
+    disableDD('shaherDD');
+  }
   yerSuzguc();
 }
 
 function yerSuzguc() {
-  const w = document.getElementById("suzgucWelayat").value;
-  const e = document.getElementById("suzgucEtrap").value;
-  const s = document.getElementById("suzgucShaher").value;
+  const w = ddValues['welayatDD'];
+  const e = ddValues['etrapDD'];
+  const s = ddValues['shaherDD'];
   let netije = mugallymlar;
   if (s) {
-    netije = mugallymlar.filter(m =>
-      m.shaher === s || m.etrap === e || m. welayat === w
-    );
-    netije.sort((a, b)=> {
+    netije = mugallymlar.filter(m => m.shaher === s || m.etrap === e || m.welayat === w);
+    netije.sort((a, b) => {
       const aPuan = a.shaher === s ? 3 : a.etrap === e ? 2 : 1;
       const bPuan = b.shaher === s ? 3 : b.etrap === e ? 2 : 1;
-      return aPuan - bPuan;
+      return bPuan - aPuan;
     });
-  }else if (e){
-   netije = mugallymlar.filter(m => m.etrap === e || m.welayat === w);
-  }else if (w){
+  } else if (e) {
+    netije = mugallymlar.filter(m => m.etrap === e || m.welayat === w);
+  } else if (w) {
     netije = mugallymlar.filter(m => m.welayat === w);
   }
   displaymugallymlar(netije);
@@ -1054,12 +1084,13 @@ window.updateFileName = function(input) {
 window.showContact = showContact;
 window.closeModal = closeModal;
 window.dilUytget = dilUytget;
-window.formWelayatChange = formWelayatChange;
-window.formShaherChange = formShaherChange;
-window.formEtrapChange = formEtrapChange;
 window.suzgucWelayatChange = suzgucWelayatChange;
 window.suzgucEtrapChange = suzgucEtrapChange;
 window.yerSuzguc = yerSuzguc;
+window.toggleDD = toggleDD;
+window.selectDD = selectDD;
+window.enableDD = enableDD;
+window.disableDD = disableDD;
 window.filtermugallymlar = filtermugallymlar;
 window.mugallymPoz = mugallymPoz;
 window.janEt = janEt;
