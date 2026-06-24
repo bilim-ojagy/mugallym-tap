@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="sOyUyALSwQ8EY1G1OKbeigElKEyQmFoN0B-22MnYUls" />
-    <title>Mugallym Tap - Hyzmatlar</title>
+    <title>Bilim Ojagy</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="css/all.min.css"/>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' 
@@ -13,33 +13,50 @@
 
   </head>
   <body id="top">
+    <div id="loader-konteyner" class="loader-hidden">
+      <div class="spinner"></div>
+    </div>
     <header>
-       
       <div class="burger" id="burger">
         <div class="line1"></div>
         <div class="line2"></div>
         <div class="line3"></div>
       </div>
+      <div class="brand-logo">Bilim Ojagy</div>
+      
       <nav class="nav-links" id="nav-menu">
 
          <div class="dil-secici-mobil">
-          <button onclick="dilUytget('tk')" class="dil-btn">
-            <img src="tm.png" alt="TM">
+          <button  onclick="dilUytget('tk')" class="dil-btn">
+            <img src="suratlar/tm.png" alt="TM">
           </button>
-          <button onclick="dilUytget('ru')" class="dil-btn">
-            <img src="ru.png" alt="RU">
+          <button  onclick="dilUytget('ru')" class="dil-btn">
+            <img src="suratlar/ru.png" alt="RU">
           </button>
            <button id="theme-mobil-toggle" class="theme-mobil-btn">
             <i class="fa-solid fa-moon"></i>
           </button>
         </div>
 
+        <a href="javascript:void(0)" onclick="sahypaGec('mugallymlar.html')">
+       <i class="fa-solid fa-chalkboard-teacher"></i>
+       <span id="footer-mugallymlar">Mugallymlar</span>
+       </a>
+
+       <a href="#biz-barada" class="nav-item button-habarlas">
+        <i class="fas fa-info-circle"></i> <span id="biz-barada-title">Biz barada</span> 
+        </a>
+
+      <a href="#habarlas" class="nav-item button-habarlas">
+        <i class="fas fa-phone"></i> <span id="footer-habarlasmak">Habarlaşmak </span> 
+        </a>
+  
+            <ul class="dropdown-menu" id="sahypa-dropdown">
+            <li><a href="#kitap-bolum">Kitaplar</a></li>
+             <li><a href="#welayatlar">Welaýatlar</a></li>
+            </ul>
+          </div>
         
-         
-       
-        <a href="#top"><i class="fa-solid fa-house"></i> <span id="menu-bas">Baş Sahypa</span></a>
-        <a href="#" id="add-mugallym-btn"
-        <a href="#top"><i class="fa-solid fa-user-plus"></i> <span id="menu-mugallym">Mugallym Bol</span></a>
 
         <div class="dropdown-container">
           <a href="#" id="category-btn">
@@ -53,37 +70,16 @@
           </ul>
         </div>
 
-        <a href="#" class="call-action" onclick="showContact(event)">
-          <i class="fa-solid fa-comments"></i> <span id="menu-jan">Habarlaşmak</span></a>
-          
-          <div id="contact-modal">
-            <div class="modal-contenc">
-              <span onclick="closeModal()">✕</span>
-              <h3>Habarlaşmak</h3>
-              <p class="biz-hakda-desc">"Mugallym Tap"- Türkmenistanda iň gowy
-                mugallymy tapmak üçin döredilen platforma. 
-                Biziň maksadymyz her bir okuwçy öz ugrundan tejribeli mugallymy
-                aňsat tapmaga kömek etmek. 
-             </p>
-              <p><i class="fa-solid fa-location-dot"></i> Aşgabat, Türkmenistan</p>
-              <p><i class="fa-solid fa-phone"></i> +993 65407509</p>
-              <p><i class="fa-solid fa-envelope"></i> srejepow902@gmail.com</p>
-              <a href="https://t.me/s_rejepow"target="_blank">
-                <i class="fa-brands fa-telegram"></i> Telegram
-               </a>
-            </div>
-          </div>
-      <a href="#" id="login-btn">
-        <i class="fa-solid fa-user"></i> <span id="menu-giris">Giriş</span></a>
-
+    
+        <a href="javascript:void(0)" onclick="document.getElementById('loginmodal').style.display='flex'" id="login-btn"></a>
       </nav>
       <div class="dil-secici">
-        <button onclick="dilUytget('tk')" class="dil-btn" id="dil-tk">
-          <img src="tm.png" alt="TM">
+        <button  onclick="dilUytget('tk')" class="dil-btn" id="dil-tk">
+          <img src="suratlar/tm.png" alt="TM">
         </button>
-        <button onclick="dilUytget('ru')" class="dil-btn" id="dil-ru">
-          <img src="ru.png" alt="RU">
-        </button>
+        <butto  onclick="dilUytget('ru')" class="dil-btn" id="dil-ru">
+          <img src="suratlar/ru.png" alt="RU">
+        </butto>
       </div>
 
        <button id="theme-toggle" class="theme-btn">
@@ -93,110 +89,195 @@
     </header>
 
     <main>
-      <div class="hero-logo">
+        <div class="hero-logo">
       <i class="fas fa-graduation-cap"></i>
      <h1 BILIM id="hero-title">BILIM OJAGY</h1>
     </div>
       <p id="hero-subtitle">Size haýsy ugurdan bilim bermeli?</p>
 
-      <div class="search-box">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Ders gözle... (meselem: Matematika)"
-        />
-        <button id="searchBtn">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <span id="search-btn">Gözle</span>
-        </button>
+       
+     
+        <div class="slider-bolum">
+          <div class="slider-container">
+
+            <div class="slide active">
+              
+                <div class="slide-surat">
+              <img src="suratlar/bilim1.jpg" alt="bilim">
+          </div>
+        </div>
+
+            <div class="slide">
+                <div class="slide-surat">
+              <img src="suratlar/bilim2.jpg" alt="bilim">
+          </div>
+        </div>
+
+            <div class="slide">
+                <div class="slide-surat">
+              <img src="suratlar/bilim3.jpg" alt="bilim">
+            </div>
+        </div>
+
+        <div class="slide">
+               <div class="slide-surat">
+              <img src="suratlar/bilim4.jpg" alt="bilim">
+            </div>
+        </div>        
+       
+            </div>
+            <div class="slider-dots">
+              <span class="dot active" onclick="goToSlide(0)"></span>
+               <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                 <span class="dot" onclick="goToSlide(3)"></span>
+          </div>
+          </div>
+
+      <div class="karta-bolum">
+        <h2 class="karta-title" id="welayat-title">Welaýat boýunça mugallym tap</h2>
+        <p class="scroll-hint" id="scroll-title">← Süýşüriň →</p>
+        <div class="welayat-kartalar">
+          <div class="welayat-karta" onclick="welayatSec('Ahal')" style="background: #0d47a1;">
+          <span class="welayat-label">Ahal</span> 
+          <span class="welayat-sub">welaýat</span> 
+          </div>
+       
+
+           <div class="welayat-karta" onclick="welayatSec('Balkan')" style="background: #2e7d32;">
+          <span class="welayat-label">Balkan</span> 
+          <span class="welayat-sub">welaýat</span>
+        </div>
+          
+           <div class="welayat-karta" onclick="welayatSec('Mary')" style="background: #e65100;">
+          <span class="welayat-label">Mary</span> 
+          <span class="welayat-sub">welaýat</span> 
+        </div>
+
+           <div class="welayat-karta" onclick="welayatSec('Daşoguz')" style="background: #1565c0;">
+          <span class="welayat-label">Daşoguz</span> 
+          <span class="welayat-sub">welaýat</span> 
+        </div>
+
+         <div class="welayat-karta" onclick="welayatSec('Lebap')" style="background: #6a1b9a;">
+          <span class="welayat-label">Lebap</span> 
+          <span class="welayat-sub">welaýat</span> 
+        </div>
+       </div>
+
+       <div class="kitap-bolum">
+        <h2 class="kitap-title" id="kitap-title">Peydaly bilim çeşmeleri</h2>
+        <div class="kitap-kartalar">
+        
+       <a href="https://science.gov.tm" target="_blank"  class="kitap-karta">
+          <div class="logo-wrapper">
+            <img src="suratlar/gerp2.png" alt="Ylymlar Akademiýasy">
+            </div>
+            <h3>Ylymlar Akademiýasy</h3>
+            <p>Ýaşlar üçin onlaýn ylmy neşirler we taslamalar</p>
+            </a> 
+          
+       <a href="https://kitaphana.bilim.tm" target="_blank"  class="kitap-karta">
+         <div class="logo-wrapper">
+          <img src="suratlar/logo.png" alt="elektron kitaphana">
+          </div>
+          <h3>Elektron kitaphana</h3>
+            <p>Türkmenistanyň resmi elektron kitaphanasy</p>
+            </a>   
+            
+       <a href="https://education.gov.tm" target="_blank"  class="kitap-karta">
+        <div class="logo-wrapper">
+          <img src="suratlar/gerp2.png" alt="Bilim ministrligi">
+          </div>
+          <h3>Bilim ministrligi</h3>
+            <p>Türkmenistanyň resmi bilim portaly</p>
+            </a>
+            
+       <a href="https://kitaphana.net" target="blank"  class="kitap-karta">
+        <div class="logo-wrapper">
+         <img src="suratlar/kitap.png" alt="kitaphana.net">
+         </div>
+          <h3>Kitaphana.net</h3>
+            <p>Mekdep we okuw kitaplary, synag biletleri</p>
+            </a> 
+          </div>  
         </div>
     </main>
-    <div class="filter-buttons">
-      <button onclick="filtermugallymlar('Ählisi')" class="filter-btn active" id="filter-all">Ählisi</button>
-       <button onclick="filtermugallymlar('Matematika')" class="filter-btn" id="filter-math">Matematika</button>
-        <button onclick="filtermugallymlar('iňlis dili')" class="filter-btn" id="filter-english">iňlis dili</button>
-         <button onclick="filtermugallymlar('Informatika')" class="filter-btn" id="filter-it">Informatika</button>
-         </div>
-      
-           <div class="yer-suzguc">
-             <div class="custom-select" id="welayatDD">
-    <div class="cs-selected" onclick="toggleDD('welayatDD')">- Ähli welaýat -</div>
-    <div class="cs-options">
-      <div onclick="selectDD('welayatDD', '', '- Ähli welaýat -')">- Ähli welaýat -</div>
-      <div onclick="selectDD('welayatDD', 'Aşgabat', 'Aşgabat')">Aşgabat</div>
-      <div onclick="selectDD('welayatDD', 'Ahal', 'Ahal')">Ahal</div>
-      <div onclick="selectDD('welayatDD', 'Balkan', 'Balkan')">Balkan</div>
-      <div onclick="selectDD('welayatDD', 'Daşoguz', 'Daşoguz')">Daşoguz</div>
-      <div onclick="selectDD('welayatDD', 'Lebap', 'Lebap')">Lebap</div>
-      <div onclick="selectDD('welayatDD', 'Mary', 'Mary')">Mary</div>
-    </div>
-  </div>
-
-   <div class="custom-select cs-disabled" id="etrapDD">
-    <div class="cs-selected" onclick="toggleDD('etrapDD')">- Ähli etrap -</div>
-    <div class="cs-options"></div>
-  </div>
-
-  <div class="custom-select cs-disabled" id="shaherDD">
-    <div class="cs-selected" onclick="toggleDD('shaherDD')">- Ähli şäher -</div>
-    <div class="cs-options"></div>
-  </div>
-</div>
-              
-    <div id="mugallymmodal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3><i class="fa-solid fa-user-plus"></i><span  id="modal-title"> Mugallym hasaba almak</span></h3>
-        <form id="mugallymForm">
-          <div class="input-group">
-            <input type="text" id="mugallymAdy" placeholder="Adyňyz we Familiýaňyz" required/>
-            <input type="text" id="dersi" placeholder="Okatýan ugruňyz"  required/>
-          </div>
-
-          <div class="input-group">
-            <input type="tel" id="mugallymTel" placeholder="+993 XX XXX XXX" required/>
-             <span id="tel-error">+993 bilen başlamaly!</span>
-            <input type="number" id="mugallymYasy" placeholder="Ýaşyňyz"required>
-            </div>
+     
+     <section id="biz-barada" class="biz-barada-section">
+      <div class="section-container">
+        <h2 id="baslyk">Biz barada</h2>
+        <p class="section-text">
+           <strong>Bilim Ojagy</strong> - <span id="text"> okuwçylar bilen ugurlar boyunça hünärmen mugallymlaryň ynamyny birleşdirýän döwrebap platformadyr.</span>
+        </p>
+    
             
-            <div class="input-group">
-              <input type="text" id="mugallymTejribe" placeholder="Tejribäňiz (meselem: 5 ýyl)" required/>
-               <select id="mugallymWelayat" onchange="formWelayatChange()" required>
-                <option value="">-Welaýat saýlaň -</option>
-                <option value="Aşgabat">Aşgabat</option>
-                <option value="Ahal">Ahal welaýaty</option>
-                <option value="Balkan">Balkan welaýaty</option>
-                <option value="Daşoguz">Daşoguz welaýaty</option>
-                <option value="Lebap">Lebap welaýaty</option>
-                <option value="Mary">Mary welaýaty</option>
-               </select>
-               <select id="mugallymEtrap" onchange="formEtrapChange()" required disabled>
-                <option value="">- Etrap saýlaň -</option>
-               </select>
-               <select id="mugallymShaher" required disabled>
-                <option value="">- Şäher saýlaň -</option>
-               </select>
-               </div>
-
-               <div class="input-group">
-               <label class="upload-label" for="mugallymSurat">
-                <i class="fa-solid fa-image"></i>
-                <span id="upload-text">Surat saýlaň</span>
-                <input type="file" id="mugallymSurat" accept="image/*"
-                onchange="updateFileName(this)">
-            </label>
+           <div class="ayratynlyk-container">
+            <div class="ayratynlyk-card">
+            <div class="icon-box"><i class="fas fa-search"></i></div>
+            <div class="card-content">
+            <h4 id="ansat-gozleg">Aňsat Gözleg</h4>
+            <p id="text-soz">etrap we dersler boýunça özüňize gerek mugallymy sekuntlar içinde saýlaň.</p>
           </div>
-           <button type="submit" class="btn-submit" id="btn-submit">Hasaba Al</button>
-        </form>
+       </div> 
+   
+           <div class="ayratynlyk-card">
+            <div class="icon-box"><i class="fas fa-user-check"></i></div>
+             <div class="card-content">
+            <h4 id="ussat">Ussat Mugallymlar</h4>
+            <p id="ugry">öz ugruny gowy bilýän, tejribeli we durnukly bilim berip biljek hünärmenleriň sanawy.</p>
+          </div>
+        </div>
+
+          <div class="ayratynlyk-card">
+            <div class="icon-box"><i class="fas fa-user-check"></i></div>
+             <div class="card-content">
+            <h4 id="aragatnasyk">Göni Aragatnaşyk</h4>
+            <p id="hili">göni mugallym bilen habarlaşmak mümkinçiligi.</p>
+          </div>
+        </div>
+
       </div>
-    </div>
+     </section>
+
+      <footer class="footer">
+            <div class="footer-content">
+
+             <div class="footer-bolum">
+              <div class="footer-logo">  
+                <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%23007bff'/><text x='50' y='72' font-size='65' font-weight='bold' text-anchor='middle' fill='white'>B</text></svg>" alt="Bilim Ojagy"> 
+                <div class="footer-logo-text">
+              <h3>Bilim Ojagy</h3>
+              <p id="dusundiris">Türkmenistanda iň gowy mugallymy tapmak üçin döredilen platforma.</p>
+              </div>
+            </div> 
+              <div class="footer-links">  
+              <a href="javascript:void(0)" onclick="sahypaGec('mugallymlar.html')" id="sahypa">Baş Sahypa</a>
+              <a href="javascript:void(0)" onclick="sahypaGec('index.html')" id="menu">Mugallymlar</a>
+              </div>
+            </div>
+              <div class="footer-bolum footer-habarlasmak" id="habarlas">
+              <h3 id="footer-habarlas">Habarlaşmak</h3>
+              <p><i class="fa-solid fa-location-dot"></i>Aşgabat, Türkmenistan</p>
+              <p><i class="fa-solid fa-phone"></i> +993 65407509</p>
+              <p><i class="fa-solid fa-envelope"></i> srejepow902@gmail.com</p>
+              <a href="https://t.me/s_rejepow"target="_blank">
+                <i class="fa-brands fa-telegram"></i> Telegram
+               </a>
+            </div>
+          </div>
+          <div class="footer-alt">
+            <p>© 2025 Bilim Ojagy. Ähli hukuklar goragly.</p>
+           </div>
+          </footer>
+                
        
     <div id="loginmodal" class="modal">
   <div class="modal-content" id="login-modal-content">
     <span class="close" id="loginClose">&times;</span>
     
 
-    <!-- Giriş paneli -->
+    
     <div class="panel active" id="panel-giris">
       <div class="panel-header">
         <div class="logo-icon">B</div>          
@@ -212,7 +293,7 @@
       <div class="divider"><span id="giris-yada">ýa-da</span></div>
 
       <button class="google-btn" onclick="googleBilenGir()">
-       <img src="google.png" width="20" height="20"/>
+       <img src="suratlar/google.png" width="20" height="20"/>
         <span id="google-giris">Google bilen gir</span>
       </button>
 
@@ -226,14 +307,14 @@
         <h2 id="hasaba-title">Hasaba Al</h2>
       </div>
       <form id="registerForm">
-        <input class="input-field" type="email" id="registerEmail" placeholder="Email adresiniz" required />
-        <input class="input-field" type="password" id="registerParol" placeholder="Parolyňyz (min 6 harp)" required />
+        <input class="input-field" type="email" id="registerEmail" placeholder="?b vcxzEmail adresiniz" required />
+        <input class="input-field" type="password" id="registerParol" placeholdAer="Parolyňyz (min 6 harp)" required />
         <button type="submit" class="btn-primary" id="hasaba-btn">Hasaba Al</button>
       </form>
       <div class="divider"><span id="hasaba-yada">ya-da</span></div>
 
       <button class="google-btn" onclick="googleBilenGir()">
-        <img src="google.png" width="20" height="20"/>
+        <img src="suratlar/google.png" width="20" height="20"/>
         <span id="google-hasaba">Google bilen gir</span>
       </button>
 
@@ -243,9 +324,11 @@
 
   </div>
 </div>
+
+      
     
     <script src="sweetalert2.all.min.js"></script>
-    <script type="module" src="script.js"></script>
+    <script type="module"  src="script.js"></script>
     <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
       <i class="fa-solid fa-arrow-up"></i>
     </button>

@@ -11,6 +11,18 @@ const firebaseConfig = {
   measurementId: "G-EV3B3RYC6H",
 };
 
+window.addEventListener("load" , () => {
+  const loader = document.getElementById("loader-konteyner");
+  if (loader) loader.style.display = "none";
+});
+
+const urlParams = new URLSearchParams(window.location.search);
+const welayatParam = urlParams.get('welayat');
+if (welayatParam) {
+  window.addEventListener('load', () => {
+    selectDD('welayatDD', welayatParam, welayatParam);
+  });
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -143,7 +155,7 @@ function displaymugallymlar(Sanaw) {
          <p><i class="fa-solid fa-user" style= "color: #007bff"></i> <strong>${t.yasy}:</strong> ${mugallym.yasy ||t.nabelli}</p>
          <p><i class="fa-solid fa-star" style= "color: #007bff"></i> <strong>${t.tejribesi}:</strong> ${mugallym.tejribe ||t.nabelli}</p> 
          <p><i class="fa-solid fa-location-dot" style= "color: #007bff"></i> <strong>${t.yer}:</strong> ${mugallym.salgy ||t.nabelli}</p>      
-         <p><i class="fa-solid fa-info-circle" style= "color: #007bff"></i>${localStorage.getItem("dil") === "ru" ? "К вашим услугам!" : "Siziň hyzmatyňyzda!"}</p>
+         <p><i class="fa-solid fa-info-circle" style= "color: #007bff"></i> ${localStorage.getItem("dil") === "ru" ? "К вашим услугам!" : "Siziň hyzmatyňyzda!"}</p>
          <div style="margin-top:15px;">
          <p><strong>${localStorage.getItem("dil") === "ru" ? "Цена:":"Baha:"}</strong> ${mugallym.bahaSany> 0 ? 
           (mugallym.baha / mugallym.bahaSany).toFixed(1) + " / 5 ("+ mugallym.bahaSany + (localStorage.getItem("dil") === "ru" 
@@ -152,7 +164,7 @@ function displaymugallymlar(Sanaw) {
          ${[1,2,3,4,5].map(i => {
             const ortaBaha = mugallym.bahaSany > 0 ? mugallym.baha / mugallym.bahaSany : 0;
             return `<span onclick="bahaBer(${mugallym.id}, ${i})"style="font-size:28px; cursor:pointer; 
-            color:${i <= ortaBaha ? '#f39c12' : '#555'};">★</span>`;
+            color:${i <= ortaBaha ? '#f39c12' : '#666'};">${i <= ortaBaha ? '★' : '☆'}</span>`;
          }).join('')}
           </div>
           </div>
@@ -196,33 +208,37 @@ function displaymugallymlar(Sanaw) {
    
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
-if (searchBtn) {
+
+ if (searchBtn) {
   searchBtn.addEventListener("click", () => {
     const gozlegSozi = searchInput.value.toLowerCase().trim();
     if(gozlegSozi === "") {
       displaymugallymlar(mugallymlar);
     }else{
     const tapylanlar = mugallymlar.filter((u) =>
-      u.ady.toLowerCase().includes(gozlegSozi)||
-      u.dersi.toLowerCase().includes(gozlegSozi)
+      u.ady && u.ady.toLowerCase().includes(gozlegSozi)||
+      u.dersi && u.dersi.toLowerCase().includes(gozlegSozi)
     );
     displaymugallymlar(tapylanlar);
     }
   });
 }
 
-searchInput.addEventListener("input",() => {
-const gozlegSozi =searchInput.value.toLowerCase().trim();
-if (gozlegSozi === "") {
-  displaymugallymlar(mugallymlar);
-}else{
-  const tapylanlar = mugallymlar.filter ((u) =>
-    u.ady.toLowerCase().includes(gozlegSozi) ||
-    u.dersi.toLowerCase().includes(gozlegSozi)
-  );
-  displaymugallymlar(tapylanlar);
+if (searchInput) {
+  searchInput.addEventListener("keyup", () => {
+    const gozlegSozi = searchInput.value.toLowerCase().trim();
+    if(gozlegSozi === "") {
+      displaymugallymlar(mugallymlar);
+    } else {
+      const tapylanlar = mugallymlar.filter((u) =>
+        (u.ady && u.ady.toLowerCase().includes(gozlegSozi)) ||
+        (u.dersi && u.dersi.toLowerCase().includes(gozlegSozi))
+      );
+      displaymugallymlar(tapylanlar);
+    }
+  });
 }
-});
+
 
 const themeBtn = document.getElementById("theme-toggle");
 const themeMobilBtn = document.getElementById("theme-mobil-toggle");
@@ -243,13 +259,26 @@ if (themeMobilBtn) themeMobilBtn.addEventListener ("click", themeUytget);
 
 function switchTab(tab){
       const isGiris = tab === 'giris';
-      document.getElementById('panel-giris').classList.toggle('active', isGiris);
-      document.getElementById('panel-hasaba').classList.toggle('active', !isGiris);
-      document.getElementById('tab-giris')?.classList.toggle('active', isGiris);
-      document.getElementById('tab-hasaba')?.classList.toggle('active', !isGiris);
+     const panelGiris = document.getElementById('panel-giris');
+     const panelHasaba = document.getElementById('panel-hasaba');
+
+     const activePanel = isGiris ? panelGiris : panelHasaba;
+     const inactivePanel = isGiris ? panelHasaba : panelGiris;
+
+     inactivePanel.style.opacity = '0';
+     inactivePanel.style.transform = 'translateX(30px)';
+     setTimeout(() => {
+      inactivePanel.classList.remove('active');
+      activePanel.classList.add('active');
+      setTimeout(() => {
+        activePanel.style.opacity = '1';
+        activePanel.style.transform = 'translateX(0)';
+      },50)
+     },300)
     }
-    document.addEventListener("DOMContentLoaded", () => {
-    });
+  
+  const burger = document.getElementById("burger");
+const nav = document.getElementById("nav-menu");
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme");
@@ -259,9 +288,9 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
   }
-});
-const burger = document.getElementById("burger");
-const nav = document.getElementById("nav-menu");
+  setTimeout(() => {
+    document.body.classList.add("theme-ready");
+  }, 200);
 
 if (burger && nav) {
   burger.addEventListener("click", () => {
@@ -269,16 +298,20 @@ if (burger && nav) {
     burger.classList.toggle("toggle");
   });
 }
-document.addEventListener("DOMContentLoaded", () => {
 
-  const nav = document.querySelector(".nav-links");
-  const burger = document.querySelector(".burger");
   document.querySelectorAll(".dropdown-menu li").forEach(li => {
     li.addEventListener("click", () => {
       nav.classList.remove("nav-active");
       burger.classList.remove("toggle");
     });
   });
+
+   document.querySelectorAll(".button-habarlas").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("nav-active");
+      burger.classList.remove("toggle");
+  });
+});
 
   const loginModal = document.getElementById("loginmodal");
   const mugallymModal = document.getElementById("mugallymmodal");
@@ -300,49 +333,70 @@ document.addEventListener("DOMContentLoaded", () => {
             if (addMugallymBtn) addMugallymBtn.style.display =  "flex";
             
             if (loginBtn) {
-                loginBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> <span id="menu-giris">${dil === "ru" ? "Выход" :  "Çykyş"}</span>`;
+                loginBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> <span id="menu-cykys">${dil === "ru" ? "Выход" :  "Çykyş"}</span>`;
                 loginBtn.dataset.state = "logout";
             }
         } else {
             localStorage.removeItem("login");
             if (addMugallymBtn) addMugallymBtn.style.display = "none";
+             
+
             if (loginBtn) {
-                loginBtn.innerHTML = `<i class="fa-solid fa-user"></i><span id="menu-giris">${dil === "ru"  ? "Вход" : "Giriş"}</span>`;
+                loginBtn.innerHTML = `<i class="fa fa-user-plus"></i> <span id="menu-giris">${dil === "ru"  ? " Регистрация" : "Hasap aç"}</span>`;
                 loginBtn.dataset.state = "login";
             }
         }
         if (typeof displaymugallymlar === "function") displaymugallymlar(mugallymlar);
     });
 
-    // --- 3. DÜWMELERIŇ FUNKSIÝALARY ---
-
-    // Giriş / Çykyş düwmesi
+   
     if (loginBtn) {
         loginBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             if (loginBtn.dataset.state === "logout") {
+               if (nav) nav.classList.remove("nav-active");
+               if (burger) burger.classList.remove("toggle");
+              const loginModal = document.getElementById("loginmodal");
+              if (loginModal) loginModal.style.display = "none";
+
+              const loader = document.getElementById("loader-konteyner");
+              if (loader) loader.style.display = "flex";
                 await signOut(auth);
                 localStorage.removeItem("login");
+
+                setTimeout(() => {
+                if (loader) loader.style.display = "none";
+                }, 1000);
+
+                
             } else {
                 if (nav) nav.classList.remove("nav-active");
                 if (burger) burger.classList.remove("toggle");
-                loginModal.style.display = "flex";
+                document.getElementById("loginmodal").classList.add('modal-open');
             }
         });
     }
 
-    // Mugallym bol düwmesi
     if (btnmugallymBol) {
         btnmugallymBol.addEventListener("click", (e) => {
             e.preventDefault();
             if (nav) nav.classList.remove("nav-active");
             if (burger) burger.classList.remove("toggle");
             mugallymModal.style.display = "flex";
+
+            const modalContent = mugallymModal.querySelector('.modal-content');
+            modalContent.style.opacity = '0';
+            modalContent.style.transform = 'translateY(-30px)';
+            modalContent.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+
+            setTimeout(() => {
+              modalContent.style.opacity = '1';
+              modalContent.style.transform = 'translateY(0)';
+            }, 10);
             openModal();
         });
     }
 
-    // Ýapmak düwmeleri
     const closeModal = () => {
         loginModal.style.display = "none";
         mugallymModal.style.display = "none";
@@ -371,9 +425,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const email = document.getElementById("loginAdy").value;
             const parol = document.getElementById("loginParol").value;
             const dil = localStorage.getItem("dil") || "tk";
+
+             const loader = document.getElementById("loader-konteyner");
+             
             try {
-                await signInWithEmailAndPassword(auth, email, parol);
                 closeModal();
+               if (loader) loader.style.display = "flex";
+                await signInWithEmailAndPassword(auth, email, parol);
+                setTimeout(() => {
+                   if (loader) loader.style.display = "none";
+                
                 const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "success", 
@@ -383,8 +444,10 @@ document.addEventListener("DOMContentLoaded", () => {
                  color:  isDark ? "#fff" : "#000", 
                  timer: 2000, 
                  showConfirmButton: false 
-                });
+              });
+           }, 1000); 
             } catch (err) {
+                if (loader) loader.style.display = "none";
                 const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "error", 
@@ -409,9 +472,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const email = document.getElementById("registerEmail").value;
             const parol = document.getElementById("registerParol").value;
             const dil = localStorage.getItem("dil") || "tk";
+            const loader = document.getElementById("loader-konteyner");
             try {
-              const userCredential = await createUserWithEmailAndPassword(auth, email, parol);
+              
               closeModal();
+              if (loader) loader.style.display = "flex";
+              const userCredential = await createUserWithEmailAndPassword(auth, email, parol);
+              setTimeout(() => {
+               if (loader) loader.style.display = "none";
               const isDark = document.body.classList.contains("dark-mode");
               Swal.fire({ 
                 icon: "success", 
@@ -426,7 +494,9 @@ document.addEventListener("DOMContentLoaded", () => {
                   htmlContainer: 'swal-center'
                 }
               });
+            }, 1000); 
             } catch (err) {
+              if (loader) loader.style.display = "none"
               const isDark = document.body.classList.contains("dark-mode");
                 Swal.fire({ 
                  icon: "error", 
@@ -442,7 +512,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Mugallym Goşmak
     if (mugallymForm) {
         mugallymForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -468,11 +537,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         salgy:[
                          document.getElementById("mugallymWelayat").value,
                          document.getElementById("mugallymEtrap").value,
-                         document.getElementById("mugallymShaher").value,
                         ].filter(Boolean).join(", "),
                         welayat: document.getElementById("mugallymWelayat").value,
                         etrap: document.getElementById("mugallymEtrap").value,
-                        shaher: document.getElementById("mugallymShaher").value,
                         surat: surat,
                         description: "Siziň hyzmatyňyzda!",
                         baha: 0,
@@ -509,9 +576,9 @@ async function googleBilenGir() {
             }     
         });
 
-        // Modaly ýapmak
+        
         const loginModal = document.getElementById("loginmodal");
-        if (loginModal) loginModal.style.display = "none";
+        if (loginModal) loginModal.classList.remove('modal-open');
          
        } catch (error) {
     console.log("Doly hata kody:", error.code);
@@ -613,7 +680,29 @@ const locationData = {
   }
 };
 
-const ddValues = { welayatDD: '', etrapDD: '', shaherDD: '' };
+function formWelayatChange() {
+  const welayat = document.getElementById("mugallymWelayat").value;
+  const etrapSelect = document.getElementById("mugallymEtrap");
+
+  etrapSelect.disabled = false;
+  etrapSelect.innerHTML = '<option value= "">- Etrap saýlaň -</option>';
+
+  const etraplar = {
+    "Aşgabat": ["Büzmeýin", "Berkararlyk", "Bagabat", "Köpetdag", "Parahat"],
+    "Ahal": ["Ak bugdaý", "Babadaýhan", "Bäherden", "Gökdepe", "Kaka"],
+    "Balkan": ["Balkanabat", "Bereket", "Esenguly", "Etrek", "Gumdag"],
+    "Daşoguz":["Akdepe", "Boldumsaz", "Görogly", "Gurbansoltan eje", "Köneürgenç"],
+    "Lebap": ["Atamyrat", "Dänew", "Garabekewül", "Halaç", "Köýtendag"],
+    "Mary": ["Baýramaly", "Garagum", "Murgap", "Sakarçäge", "Tagtabazar"], 
+  };
+  if (etraplar[welayat]) {
+    etraplar[welayat].forEach(etrap => { 
+  etrapSelect.innerHTML += `<option value="${etrap}">${etrap}</option>`;
+    });
+   }
+}
+
+const ddValues = { welayatDD: '', etrapDD: '', };
 
 function toggleDD(id) {
   const dd = document.getElementById(id);
@@ -630,7 +719,6 @@ function selectDD(id, value, label) {
 
   if (id === 'welayatDD') suzgucWelayatChange();
   if (id === 'etrapDD') suzgucEtrapChange();
-  if (id === 'shaherDD') yerSuzguc();
 }
 
 // Dropdown enable/disable
@@ -656,19 +744,6 @@ function setEtrapOptions(welayat) {
   ddValues['etrapDD'] = '';
 }
 
-function setShaherOptions(welayat, etrap) {
-  const dd = document.getElementById('shaherDD');
-  const opts = dd.querySelector('.cs-options');
-  opts.innerHTML = '';
-  addOption(opts, '', '- Ähli şäher -', 'shaherDD');
-  if (welayat && etrap && locationData[welayat][etrap]) {
-    locationData[welayat][etrap].forEach(s => {
-      addOption(opts, s, s, 'shaherDD');
-    });
-  }
-  dd.querySelector('.cs-selected').childNodes[0].textContent = '- Ähli şäher -';
-  ddValues['shaherDD'] = '';
-}
 
 function addOption(container, value, label, ddId) {
   const div = document.createElement('div');
@@ -690,8 +765,6 @@ document.addEventListener('click', function(e) {
 function suzgucWelayatChange() {
   const w = ddValues['welayatDD'];
   setEtrapOptions(w);
-  setShaherOptions('', '');
-  disableDD('shaherDD');
   if (w && locationData[w]) {
     enableDD('etrapDD');
   } else {
@@ -701,30 +774,14 @@ function suzgucWelayatChange() {
 }
 
 function suzgucEtrapChange() {
-  const w = ddValues['welayatDD'];
-  const e = ddValues['etrapDD'];
-  setShaherOptions(w, e);
-  if (w && e && locationData[w][e]) {
-    enableDD('shaherDD');
-  } else {
-    disableDD('shaherDD');
-  }
   yerSuzguc();
 }
 
 function yerSuzguc() {
   const w = ddValues['welayatDD'];
   const e = ddValues['etrapDD'];
-  const s = ddValues['shaherDD'];
   let netije = mugallymlar;
-  if (s) {
-    netije = mugallymlar.filter(m => m.shaher === s || m.etrap === e || m.welayat === w);
-    netije.sort((a, b) => {
-      const aPuan = a.shaher === s ? 3 : a.etrap === e ? 2 : 1;
-      const bPuan = b.shaher === s ? 3 : b.etrap === e ? 2 : 1;
-      return bPuan - aPuan;
-    });
-  } else if (e) {
+  if (e) {
     netije = mugallymlar.filter(m => m.etrap === e || m.welayat === w);
   } else if (w) {
     netije = mugallymlar.filter(m => m.welayat === w);
@@ -794,28 +851,26 @@ async function mugallymGos(tazemugallym) {
   console.error("Ýalňyşlyk:", e);
 }
 }
-document.querySelector('a[href="#top"]').addEventListener("click",(e) =>{
+const topLink = document.querySelector('a[href="#top"]')
+if (topLink) {
+topLink.addEventListener("click",(e) =>{
   e.preventDefault()
   window.scrollTo({top: 0, behavior: "smooth"});
 });
+}
 function janEt(tel) {
-   const dil = localStorage.getItem("dil") || "tk";
-  Swal.fire({
-    title: dil === "ru" ? "Связаться" : 'Habarlaşmak',
-    text:'Tel: ' + tel,
-    background:'#1a1a1a',
-    color: '#fff'
-  });
+   window.location.href = "tel:" + tel;
 }
 async function bahaBer(id, yildyz) {
   const berenler = JSON.parse (localStorage.getItem ("bahaBerenler")) || [];
   if (berenler.includes(Number(id))){
     const dil = localStorage.getItem("dil") || "tk"
+    const isDark = document.body.classList.contains("dark-mode");
     Swal.fire({
       icon: "warning",
       title:  dil === "ru" ? "Вы уже оценили!" :"Eýýäm baha berdiňiz!",
-      background: "#1a1a1a",
-      color: "#fff",
+      background: isDark ? "#1a1a1a" : "#ffffff",
+      color: isDark ? "#fff" : "#000",
       timer: 1500,
       showConfirmButton: false,
     });
@@ -838,14 +893,18 @@ async function bahaBer(id, yildyz) {
     localStorage.setItem("bahaBerenler", JSON.stringify(berenler));
     displaymugallymlar(mugallymlar);
     const dil = localStorage.getItem("dil") || "tk"
+     const isDark = document.body.classList.contains("dark-mode");
     Swal.fire({
       icon:"success",
       title: yildyz + " yildyz!",
       text:  dil === "ru" ? "Спасибо за вашу оценку!" :"Bahaňyz üçün sag boluň!",
-      background: "#1a1a1a",
-      color: "#fff",
+      background: isDark ? "#1a1a1a" : "#ffffff",
+      color: isDark ? "#fff" : "#000",
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+      htmlContainer: 'swal-center'
+    }
    
     });
   }
@@ -862,6 +921,9 @@ async function teswirGos(id) {
       color: "#fff",
       timer: 1500,
       showConfirmButton: false,
+      customClass: {
+      htmlContainer: 'swal-center'
+    }
     });
     return;
   }
@@ -917,7 +979,8 @@ const diller = {
     "menu-bas": "Baş Sahypa",
     "menu-mugallym": "Mugallym Bol",
     "menu-jan": "Habarlaşmak",
-    "menu-giris": "Giriş",
+    "menu-giris": "Hasap aç ",
+    "menu-cykys": "Çykyş",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "Size haýsy ugurdan bilim bermeli?", 
     "search-placeholder-text": "Ders gözle...",
@@ -926,102 +989,97 @@ const diller = {
     "nav-dersler": "Dersler",
     "select-welayat": "- Ähi welayat -",
     "select-etrap": "- Ähi etrap -",
-    "select-shaher": "- Ähi şäher -",
     "modal-title": "Mugallym hasaba almak",
     "btn-submit": "Hasaba Al",
-    "surat-label": "Surat saýlaň",
-    "giris-title": "Giriş",
+    "upload-text": "Surat saýlaň",
+    "giris-title": "Hasaba giriň",
     "giris-btn": "Giriş",
     "giris-yada": "ya-da",
     "google-giris": "Google bilen gir",
-    "hasaba-al-link": "Hasaba Al",
-    "hasaba-title": "Hasaba Al",
-    "hasaba-btn": "Hasaba Al",
+    "hasaba-al-link": "Döretmek",
+    "hasaba-title": "Hasap açyň",
+    "hasaba-btn": "Döretmek",
     "hasaba-yada": "ya-da",
     "google-hasaba": "Google bilen gir",
     "giris-link": "Giriş",
     "biz-hakda-title": "Biz hakda",
     "biz-hakda-desc": '"Mugallym Tap"- Türkmenistanda iň gowy mugallymy tapmak üçin döredilen platforma. Biziň maksadymyz her bir okuwçy öz ugrundan tejribeli mugallymy aňsat tapmaga kömek etmek.',
     "biz-yer": "Aşgabat, Türkmenistan",
+    "welayat-title": "Welaýat boýunça mugallym tap",
+    "scroll-title": "← Süýşüriň →",
+    "kitap-title": "Peydaly bilim çeşmeleri",
+    "biz-barada-title": "Biz-barada",
+    "footer-bas": "Baş Sahypa",
+    "footer-mugallymlar": "Mugallymlar",
+    "footer-habarlasmak": "Habarlaşmak",
+    "footer-habarlas": "Habarlaşmak",
+    "dusundiris": "Türkmenistanda iň gowy mugallymy tapmak üçin döredilen platforma.",
+    "menu": "Baş Sahypa",
+    "sahypa": "Mugallymlar",
+    "baslyk": "Biz barada",
+    "text": "okuwçylar bilen ugurlar boyunça hünärmen mugallymlaryň ynamyny birleşdirýän döwrebap platformadyr.",
+    "ansat-gozleg": "Aňsat Gözleg",
+    "text-soz": "etrap we dersler boýunça özüňize gerek mugallymy sekuntlar içinde saýlaň.",
+    "ussat": "Ussat Mugallymlar",
+    "ugry": "öz ugruny gowy bilýän, tejribeli we durnukly bilim berip biljek hünärmenleriň sanawy.",
+    "aragatnasyk": "Göni Aragatnaşyk",
+    "hili": "göni mugallym bilen habarlaşmak mümkinçiligi.",
+    "dusun": "Hünärmen mugallymlaryň sanawy we maglumatlary"
   },
+  
   ru: {
     "menu-bas": "Главная", 
     "menu-mugallym": "Стать учителем",
     "menu-jan": "Позвонить",
-    "menu-giris": "Вход",
+    "menu-giris": "Регистрация",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "По какому направлению вы хотите учиться?",
     "search-placeholder-text": "Поиск предмета...", 
     "search-btn": "Найти",
-    "filter-all": "Все",
+    "filter-all": "Bce",
     "nav-dersler": "Предметы",
-    "select-welayat": "- Все велаяты -",
-    "select-etrap": "- Все этрапы -",
-    "select-shaher":   "- Все города -",
+    "select-welayat": "- Bce велаяты -",
+    "select-etrap": "- Bce этрапы -",
     "modal-title": "Регистрация учителя",
     "btn-submit": "Зарегистрироваться",
-    "surat-label": "Выберите фото",
-    "giris-title": "Вход",
+    "upload-text": "Выберите фото",
+    "giris-title": "Вход в аккаунт",
     "giris-btn": "Войти",
     "giris-yada": "или",
     "google-giris": "Войти через Google",
-    "hasaba-al-link": "Зарегистрироваться",
+    "hasaba-al-link": "Создат",
     "hasaba-title": "Регистрация",
-    "hasaba-btn": "Зарегистрироваться",
+    "hasaba-btn": "Создат",
     "hasaba-yada": "или",
     "google-hasaba": "Войти через Google",
     "giris-link": "Войти",
-    "biz-hakda-title": "О нас",
+    "biz-hakda-title": "O нас",
     "biz-hakda-desc": '"Mugallym Tap" — платформа для поиска лучших учителей в Туркменистане. Наша цель — помочь каждому ученику легко найти опытного учителя по своему направлению.',
     "biz-yer": "Ашхабад, Туркменистан",
+    "welayat-title": "Найти учителя по региону",
+    "scroll-title": "← Прокрутите →",
+    "kitap-title": "Полезные образовательные ресурсы",
+    "biz-barada-title": "O нас",
+    "footer-bas": "Главная",
+    "footer-mugallymlar": "Учителя",
+    "footer-habarlasmak": "Контакты",
+    "footer-habarlas": "Контакты",
+    "dusundiris": "Платформа для поиска лучших учителей в Туркменистане.",
+    "menu": "Главная",
+    "sahypa": "Учителя",
+    "baslyk": "O нас",
+    "text": "современная платформа, объединяющая учеников c опытными учителями.",
+    "ansat-gozleg": "Простой поиск",
+    "text-soz": "Выбирайте нужного преподавателя по велаятам, этрапам и предметам за считанные секунды.",
+    "ussat": "Опытные преподаватели",
+    "ugry": "Список квалифицированных специалистов, глубоко знающих свое дело и способных дать прочные знания.",
+    "aragatnasyk": "Прямая связь",
+    "hili": "Возможность связаться c преподавателем напрямую.",
+    "dusun": "Данные квалифицированных учителей",
   },
- 
 };
-function dilUytget(dil) {
-  if(!diller[dil])  return;
-  localStorage.setItem("dil", dil);
-  const sozluk = diller[dil];
-  for (const id in sozluk){
-    const el = document.getElementById(id);
-    if (el) el.textContent = sozluk[id];
-  }
-  const input = document.getElementById("searchInput");
-  if (input) input.placeholder = sozluk["search-placeholder-text"];
-  const welayat = document.querySelector("#suzgucWelayat option[value='']");
-  if (welayat) welayat.textContent = sozluk["select-welayat"];
-  const etrap = document.querySelector("#suzgucEtrap option[value='']");
-  if (etrap) etrap.textContent = sozluk["select-etrap"]; 
-  const shaher = document.querySelector("#suzgucShaher option[value='']");
-  if (shaher) shaher.textContent = sozluk["select-shaher"]; 
-  document.querySelectorAll(".dil-btn").forEach(btn => btn.classList.remove("active"));
-  document.getElementById("dil-" + dil)?.classList.add("active");
 
-const loginAdy = document.getElementById("loginAdy");
-if (loginAdy) loginAdy.placeholder = dil === "ru" ? "Ваш Email" : "Email adresiňiz";
-
-const loginParol = document.getElementById("loginParol");
-if (loginParol) loginParol.placeholder = dil === "ru" ? "Ваш пароль" : "Parolyňyz";
-
-const registerEmail = document.getElementById("registerEmail");
-if (registerEmail) registerEmail.placeholder = dil === "ru" ? "Ваш Email" : "Email adresiňiz";
-
-const registerParol = document.getElementById("registerParol");
-if (registerParol) registerParol.placeholder = dil === "ru" ? "Ваш пароль (мин 6 символов)" : "Parolyňyz (min 6 harp)";
-
-const switchTab1 = document.querySelector("#panel-giris .switch-tab");
-if (switchTab1) switchTab1.firstChild.textContent = dil === "ru" ? "Нет аккаунта?" :"Hasabyň ýokmy?";
-
-const switchTab2 = document.querySelector("#panel-hasaba .switch-tab");
-if (switchTab2) switchTab2.firstChild.textContent = dil === "ru" ? "Уже есть аккаунт?" :"Hasabyň barmy?";
-
-if (typeof displaymugallymlar === "function") {
-  displaymugallymlar(window.soňkyMugallymlar || []);
-}
-
-
-
-
-   const placeholder = {
+ const placeholder = {
     tk: {
       mugallymAdy: "Adyňyz we Familýaňyz",
       dersi: "Okatýan ugruňyz",
@@ -1035,22 +1093,80 @@ if (typeof displaymugallymlar === "function") {
       mugallymTejribe:"Ваш опыт (например: 5 лет)",
     }
   };
-  const p = placeholder[dil];
+  const currentDil = localStorage.getItem("id") || "tk";
+  const p = placeholder[currentDil];
   for (const id in p) {
     const el = document.getElementById(id);
     if (el) el.placeholder = p[id];
   }
+function dilUytget(dil) {
+  if(!diller[dil])  return;
+  if (nav) nav.classList.remove("nav-active");
+  if (burger) burger.classList.remove("toggle");
+  const loader = document.getElementById("loader-konteyner");
+  if (loader) loader.style.display = "flex";
+  setTimeout(() => {
+  localStorage.setItem("dil", dil);
+  const sozluk = diller[dil];
+  for (const id in sozluk){
+    const el = document.getElementById(id);
+    if (el) el.textContent = sozluk[id];
 }
-function openModal(){
-const dil = localStorage.getItem("dil") || "tk"
-const mWelayat = document.querySelector("#mugallymWelayat option[value='']");
+ const p = placeholder[dil];
+if (p) {
+  for (const pid in p) {
+    const pel = document.getElementById(pid);
+    if (pel) pel.placeholder = p[pid];
+  }
+}
+ const input = document.getElementById("searchInput");
+  if (input) input.placeholder = sozluk["search-placeholder-text"];
+  const welayat = document.querySelector("#suzgucWelayat option[value='']");
+  if (welayat) welayat.textContent = sozluk["select-welayat"];
+  const etrap = document.querySelector("#suzgucEtrap option[value='']");
+  if (etrap) etrap.textContent = sozluk["select-etrap"]; 
+
+  document.querySelectorAll(".dil-btn").forEach(btn => btn.classList.remove("active"));
+  document.getElementById("dil-" + dil)?.classList.add("active");
+  
+ const mWelayat = document.querySelector("#mugallymWelayat option[value='']");
 if (mWelayat) mWelayat.textContent = localStorage.getItem("dil") === "tk" ? "- Welayat saýlaň -" :"- Выберите велаят -";
 
 const mEtrap = document.querySelector("#mugallymEtrap option[value='']");
 if (mEtrap) mEtrap.textContent = localStorage.getItem("dil") === "tk" ? "- Etrap saýlaň -" :"- Выберите этрап -";
 
-const mShaher = document.querySelector("#mugallymShaher option[value='']");
-if (mShaher) mShaher.textContent =localStorage.getItem("dil") === "tk" ? "- Şäher saýlaň -" :"- Выберите город -";
+const loginAdy = document.getElementById("loginAdy");
+if (loginAdy) loginAdy.placeholder = localStorage.getItem("dil") === "ru" ? "Email адрес" : "Email salgysy";
+
+const loginParol = document.getElementById("loginParol");
+if (loginParol) loginParol.placeholder = localStorage.getItem("dil") === "ru" ? "Пароль" : "Açar sözüňiz";
+
+const registerEmail = document.getElementById("registerEmail");
+if (registerEmail) registerEmail.placeholder = localStorage.getItem("dil") === "ru" ? "Email адрес" : "Email salgysy";
+
+const registerParol = document.getElementById("registerParol");
+if (registerParol) registerParol.placeholder = localStorage.getItem("dil") === "ru" ? "Пароль" : "Açar sözüňiz";
+
+const switchTab1 = document.querySelector("#panel-giris .switch-tab");
+if (switchTab1) switchTab1.firstChild.textContent = localStorage.getItem("dil") === "ru" ? "Нет аккаунта?" :"Hasabyň ýokmy?";
+
+const switchTab2 = document.querySelector("#panel-hasaba .switch-tab");
+if (switchTab2) switchTab2.firstChild.textContent = localStorage.getItem("dil") === "ru" ? "Уже есть аккаунт?" :"Hasabyň barmy?";
+
+
+   if (loader) loader.style.display = "none";
+ }, 800);
+}
+window.dilUytget = dilUytget;
+
+
+if (typeof displaymugallymlar === "function") {
+  displaymugallymlar(window.soňkyMugallymlar || []);
+}
+
+
+function openModal(){
+const dil = localStorage.getItem("dil") || "tk"
 }
 
 const saklananDil = localStorage.getItem("dil") || "tk";
@@ -1065,6 +1181,7 @@ function showContact(e) {
 }
 function closeModal() {
   document.getElementById("contact-modal").classList.remove("active");
+ 
    if (mugallymForm) mugallymForm.reset();
   const suratInput = document.getElementById("mugallymSurat");
   if (suratInput) suratInput.value = "";
@@ -1078,12 +1195,76 @@ window.updateFileName = function(input) {
     text.textContent = "Surat saýlaň";
   }
 }
+let currentSlide = 0;
+let sliderSlides = [];
+let sliderDots = [];
+
+window.addEventListener('load', () => {
+ sliderSlides = Array.from(document.querySelectorAll('.slide'));
+ sliderDots = Array.from(document.querySelectorAll('.dot'));
+ if (sliderSlides.length > 0) {
+    setInterval(() => changeSlide(1), 4000);
+  }
+});
+function goToSlide(n) {
+   if (sliderSlides.length === 0) return;
+  sliderSlides[currentSlide].classList.remove('active');
+  sliderDots[currentSlide].classList.remove('active');
+  currentSlide = (n + sliderSlides.length) % sliderSlides.length;
+  sliderSlides[currentSlide].classList.add('active');
+  sliderDots[currentSlide].classList.add('active');
+}
+
+function changeSlide(dir) {
+  if (sliderSlides.length === 0) return;
+  goToSlide(currentSlide + dir);
+}
 
 
+const slideMugallyymBtn = document.getElementById('slide-mugallym-btn');
+if (slideMugallyymBtn) {
+  slideMugallyymBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('mugallymmodal').style.display = 'flex';
+  });
+}
 
+
+function welayatSec(welayat) {
+  window.location.href = 'mugallymlar.html?welayat=' + encodeURIComponent(welayat);
+}
+function sahypaGec(salgy) {
+  const loader = document.getElementById("loader-konteyner");
+  if (loader) {
+  loader.style.display = "flex";
+  }
+
+  if (nav) nav.classList.remove("nav-active");
+  if (burger) burger.classList.remove("toggle");
+
+  setTimeout(() => {
+    window.location.href = salgy;
+  }, 1500);
+}
+function loginModalAc() {
+  const modal = document.getElementById("loginmodal");
+  modal.classList.add('modal-open');
+}
+function mugallymModalAc() {
+  const modal = document.getElementById("mugallymmodal");
+  modal.classList.add('modal-open');
+}
+
+
+window.mugallymModalAc = mugallymModalAc;
+window.loginModalAc = loginModalAc;
+window.sahypaGec = sahypaGec;
+window.formWelayatChange = formWelayatChange;
+window.welayatSec = welayatSec;
+window.goToSlide = goToSlide;
+window.changeSlide = changeSlide;
 window.showContact = showContact;
 window.closeModal = closeModal;
-window.dilUytget = dilUytget;
 window.suzgucWelayatChange = suzgucWelayatChange;
 window.suzgucEtrapChange = suzgucEtrapChange;
 window.yerSuzguc = yerSuzguc;
