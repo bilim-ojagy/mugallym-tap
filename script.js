@@ -1032,6 +1032,7 @@ const diller = {
     "menu-mugallym": "Стать учителем",
     "menu-jan": "Позвонить",
     "menu-giris": "Регистрация",
+    "menu-cykys": "Вход",
     "hero-title": "BILIM OJAGY",
     "hero-subtitle": "По какому направлению вы хотите учиться?",
     "search-placeholder-text": "Поиск предмета...", 
